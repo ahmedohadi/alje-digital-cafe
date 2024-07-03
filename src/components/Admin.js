@@ -47,7 +47,7 @@ const Admin = () => {
 
   return (
     <div className="container mt-5">
-      <h1 className="text-center">Admin</h1>
+      <h1 className="text-center">Admin Panel</h1>
       <div className="form-group">
         <label htmlFor="name">Item Name</label>
         <input

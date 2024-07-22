@@ -1,0 +1,10 @@
+@font-face {
+  font-family: "Karbon";
+  src: url("./Fonts/Karbon-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.custom-font {
+  font-family: "Karbon", sans-serif;
+}

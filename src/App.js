@@ -35,7 +35,7 @@ function App() {
     <Router>
       <Switch>
         <Route path="/menu" component={Menu} />
-        <Route path="/orders" component={Order} />
+        <Route path="/order" component={Order} />
         <Route path="/admin" component={Admin} />
         <Route path="/" exact component={Menu} />
         <Route path="*" component={Menu} />

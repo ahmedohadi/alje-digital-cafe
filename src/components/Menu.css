@@ -1,0 +1,796 @@
+/* Done by: Jana Hani Sandeyouni */
+
+/* Font */
+@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&family=Lobster+Two:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+:root {
+  --header-height: 5rem;
+  --first-color: hsl(27, 34%, 59%);
+  --first-color-light: hsl(42, 13%, 34%);
+  --title-color: hsl(0, 0%, 100%);
+  --text-color: hsl(0, 0%, 67%);
+  --bg-color: hsl(0, 0%, 8%);
+  --container-color: hsl(0, 0%, 6%);
+  --hsla: hsla(0, 0%, 0%, 0.75);
+  --body-font: 'Kanit', sans-serif;
+  --second-font: 'Lobster Two', cursive;
+  --biggest-font-size: 4.125rem;
+  --bigger-font-size: 3.125rem;
+  --big-font-size: 2.5rem;
+  --h1-font-size: 1.875rem;
+  --h2-font-size: 1.75rem;
+  --h3-font-size: 1.5rem;
+  --largest-font-size: 1.375rem;
+  --larger-font-size: 1.25rem;
+  --large-font-size: 1.125rem;
+  --normal-font-size: 1rem;
+  --weight-400: 400;
+  --weight-500: 500;
+  --weight-600: 600;
+  --weight-700: 700;
+  /* Border-radius */
+  --radius: 0.5rem;
+  --transition: ease-in-out;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+input,
+textarea,
+body {
+  font-family: var(--body-font);
+  font-size: var(--normal-font-size);
+  color: var(--text-color);
+  background-color: #f8f9fa;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--second-font);
+  font-weight: var(--weight-400);
+  color: var(--title-color);
+}
+
+ul {
+  list-style: none;
+}
+
+p {
+  line-height: 1.8;
+}
+
+a {
+  text-decoration: none;
+}
+
+input,
+textarea {
+  border: none;
+  outline: none;
+}
+
+
+/* form section */
+.form-section {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.section-title {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 40s linear infinite;
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+/* Footer section */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 30px;
+  background-color: rgba(	127, 170, 187);
+  color: #fff;
+  position: relative;
+  background-size: 1000px;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.footer-text {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  width: 100%;
+  margin-top: 400px;
+}
+
+/* menu section */
+.menu-section {
+  background-color: #f8f9fa;
+  padding: 2rem 0;
+}
+
+.menu-item-image {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
+.row-cols-1 > * {
+  margin-bottom: 1.5rem;
+}
+
+/* General Styles */
+.menu-section {
+  padding: 20px 0;
+  background-color: #f8f9fa;
+}
+
+.sections-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.cards {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  flex-direction: row;
+  margin-bottom: 20px;
+  width: 400px;
+}
+
+.cards-body {
+  display: flex;
+  flex: 1 ;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  color: #333;
+
+}
+
+.cards-body p{
+  color: #6c757d;
+}
+
+.cards-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.form-check{
+
+  display: flex;
+  flex-direction: row;
+  width: 70px;
+
+  margin: 10px 15px;
+}
+
+.form-check-input{
+
+font-size: 15px;
+}
+
+.form-check-label {
+  margin-left: 8px;
+  font-size: 0.95rem;
+  display: flex;
+  flex-wrap: wrap;
+  
+ 
+}
+
+.menu-item-image {
+  width: 140px;
+  height: 250px;
+  border-radius: 9px;
+  margin-left: 1rem;
+}
+
+.btn-block {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1.25rem;
+}
+
+
+.row .col-md-6 {
+  padding: 0 15px;
+}
+
+.menu-section  .col-md-3 {
+  display: flex;
+  justify-content: center;
+  width: 300px;
+  
+}
+
+.forms-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.cards {
+  margin: 10px;
+  /* adjust the width to fit your needs */
+}
+
+.cards.mx-3.mb-3 {
+  margin: 10px 15px; /* adjust the margin to fit your needs */
+}
+
+.cards p{
+  font-size: 12px;
+  margin-left: 12px;
+}
+
+.menu-section .cards:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 20px #75869424;
+
+  color: white;
+}
+
+.menu-section .cards {
+  border: none;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+
+
+/* 
+.cta-title {
+  align-items: center;
+  margin-left: 10px;
+} */
+
+.text-div{
+  margin-top: 110px;;
+
+}
+
+.cta-title span{
+  color:   rgb(76, 118, 135);
+  align-items: center;
+  font-size: 50px;
+}
+
+.cta h2,h1{
+  color:  #6e7074;
+  align-items: center;
+  
+  /* margin-top: 80px;
+  margin-left: 190px; */
+}
+
+/* .carousel-item .cta-text {
+  flex: 1;
+} */
+
+.cta{
+  width:100%;
+  background-image: url(../../public/Jameel75_bg.jpg);
+  background-position: center;
+  background-size: 1100px;
+  text-align: center;
+  padding: 30px ;
+  margin-bottom: 90px;
+  box-shadow: 0 10px 20px #75869424;
+  height:500px;
+
+}
+
+ .cta img {
+  max-height: 150px;
+  justify-content: center;
+  align-items: center;
+  /* margin-right: 150px;
+  margin-top: 90px; */
+}  
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.048); /* Adjust the opacity as needed */
+  color: white;
+  text-align: center;
+}
+
+
+
+.order-now-button {
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+  background-color:	rgba(	82, 133, 154);
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 20px;
+  margin-top: 450px;
+
+
+}
+
+.order-now-button:hover {
+  background-color: white;
+  color: rgba(	82, 133, 154);
+}
+
+/* Other styles ... */
+
+.btn-2{
+  width: 200px;
+  margin-left: 350px;
+  border-radius: 20px;
+  background-color: rgba(	82, 133, 154);
+  color: #edf7ff;
+  transition: background-color 0.4s;
+}
+
+.btn-2:hover {
+  background-color: white;
+  color:#3c4145;
+}
+
+
+
+/* Initially hide the items */
+.menu-section .cards {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+/* When the item is in view, make it visible */
+.menu-section .cards.visible {
+  opacity: 2;
+  transform: translateY(0);
+}
+
+/* Header styles */
+.header {
+  top: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.078); /* Adjust the opacity as needed */
+  z-index: 10;
+  text-align: center;
+  
+}
+
+.header-title {
+  color:  #606164;
+  font-size: 2rem;
+  margin: 0;
+  
+}
+
+
+ /* Form section */
+.form-s {
+  margin-top: 1rem; /* Adjust margin as needed */
+}
+
+.form-s {
+  position: fixed;
+}
+
+/* effect title and hero image section */
+.cta-title span {
+  opacity: 0;
+  animation: fadeInSpan 5s forwards infinite;
+}
+
+.cta-title h1 {
+  opacity: 0;
+  animation: fadeInH1 1s forwards infinite;
+}
+
+.cta-image {
+  opacity: 0;
+  animation: slideInImage 1s forwards;
+}
+
+@keyframes fadeInSpan {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInH1 {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInImage {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+
+/* form secrtion */
+.name1{
+  justify-content: center;
+  margin-top: 300px;
+  margin-right: 50px;
+  margin-left:15px;
+}
+
+.dep1{
+  justify-content: center;
+  margin-left:80px;
+  margin-top: 300px;
+  width: 200px;
+  margin-right: 50px;
+}
+
+.dep2{
+  text-align: left;
+ width: 230px;
+ padding: 0;
+ margin-left: 35px;
+ margin-bottom: 15px;
+ 
+}
+
+/* menu secrtion */
+.search-field .input-group-text {
+  cursor: pointer;
+}
+
+
+/* header secrtion */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+
+}
+
+.header-title {
+  font-size: 2rem;
+}
+
+.logo-image {
+  height: 50px; /* Adjust height as needed */
+  size: 100px;
+}
+
+
+/* Confirmation Modal section */
+.btn-no{
+  width: 100px;
+  border-radius: 20px;
+}
+
+.btn-yes{
+  width: 100px;
+  border-radius: 20px;
+  background-color: #6c757d;
+}
+
+.custom-modal h5{
+  justify-content: center;
+  margin-left: 170px;
+  
+}
+
+.custom-modal .modal-footer {
+  display: flex;
+  justify-content: space-between; /* Arrange buttons side by side */
+}
+
+.custom-modal button .btn-primary{
+  justify-content: center;
+}
+
+
+/* Media responsiveness section */
+@media (max-width: 768px) {
+
+/* .cta-text{
+margin-top: 30px;
+height: 240px;
+position: fixed;
+padding-right: 600px;
+} */
+
+/*.cta-text{
+margin-top: 90px;
+margin-right: 200px;
+text-align: justify;
+} */
+
+/* .cta-text h1{
+ display: inline;
+ font-size: 30px;
+  margin-right: 200px; 
+ text-align: left;
+ background-color: beige;
+} */
+
+/*.cta-text{
+   margin-top: 100px; 
+}*/
+
+/* .cta span{
+  font-size: 40px;
+} */
+
+/* .cta-image img{
+margin-right: 150px;
+position: relative;
+margin-top: 130px;
+} */
+
+/* .text-div{
+align-self: baseline;
+align-items: flex-start;
+} */
+
+/* .cta h1{
+display: inline;
+font-size: 40px;
+z-index: -1;
+position: relative;
+} */
+
+/*.cta-title{
+ margin-right: 200px; 
+  }*/
+
+  /* Adjust carousel image size 
+  .cta-image img {
+    width: 100%; /* Ensure image scales with container 
+  }*/
+
+  /* Adjust header title and logo size */
+  .header-title {
+    font-size: 20px;
+  }
+  
+  .logo-image {
+    max-width: 200px; /* Adjust as necessary */
+  }
+
+  .btn-block {
+    margin-left: auto; /* Center the button */
+    margin-right: auto; /* Center the button */
+    display: block; ;/* Ensure it's a block element for centering */
+  }
+  
+  /* Stack menu cards vertically */
+  .cards {
+    margin-bottom: 20px;
+  }
+
+  /* Adjust form input width and font size */
+  .form-control {
+    width: 100%;
+    font-size: 14px; /* Adjust as necessary */
+  }
+
+  /* Adjust confirmation modal styles */
+  .modal-content {
+    max-width: 100%;
+  }
+
+  .name2{
+  
+    margin-left: 20px;
+    width: 130%;
+  }
+
+  /* .carousel-title {
+    position: relative;
+    left: -20px; /* Adjust this value as needed
+    transform: translateX(-50%); /* Adjust this value as needed 
+  } */
+}
+
+
+
+
+
+/* Customize scrollbar */
+::-webkit-scrollbar {
+  width: 10px; /* Width of the scrollbar */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(127, 170, 187); /* Color of the track */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(76, 118, 135);/* Color of the scrollbar handle */
+  border-radius: 5px; /* Rounded corners of the handle */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background:  rgb(76, 118, 135); /* Color of the scrollbar handle on hover */
+}
+
+
+
+.invalid {
+  border: 2px solid red; /* Red border for invalid fields */
+  /* Optionally, adjust padding or margin for better visibility */
+}
+
+.invalid + .error-message {
+  color: red;
+  font-size: 0.8rem;
+  position: absolute;
+  top: -20px;
+  left: 0;
+}
+
+
+
+.invalid {
+  border-color: red;
+  box-shadow: 0 0 10px red;
+}
+
+
+.invalid {
+  border-color: red; /* Example: Red border for invalid fields */
+}
+
+/* Menu.css */
+.error {
+  border: 2px solid red !important;
+}
+
+.hidden {
+  display: none;
+}
+
+
+.header {
+  transition: opacity 5s; /* add a smooth transition effect */
+}
+
+.header.hidden {
+  opacity: 0;
+}
+
+.search-input-group {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.search-input {
+  width: 100%;
+  padding-right: 2.5rem; /* Make space for the search icon */
+}
+
+.search-icon {
+  position: absolute;
+  right: 1rem;
+  pointer-events: none; /* Ensure the icon doesn't block input */
+}
+
+
+.scroll-up-button, .scroll-down-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: #fff;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.5s;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scroll-up-button.show, .scroll-down-button.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.scroll-buttons {
+  position: fixed;
+  bottom: 80px; /* Adjust as needed */
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.scroll-buttons.visible {
+  opacity: 2;
+}
+
+.scroll-button {
+  background-color: rgb(76, 118, 135);
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.scroll-button i {
+  color: #fff;
+  font-size: 24px;
+}
+

@@ -1,0 +1,40 @@
+/* Admin.css */
+.custom-button {
+  background-color: #405D72;
+  color: #FFF8F3;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.custom-button:hover {
+  background-color: #758694;
+  transform: scale(1.05);
+}
+
+.custom-button:active {
+  background-color: #405D72;
+  transform: scale(0.95);
+}
+
+.btn{
+  width: 250px;
+  
+} 
+
+
+@media (max-width: 768px) {
+ 
+  .header-title{
+   font-size: 30px;
+   
+  }
+
+  .header-imge {
+   width: 200px; 
+   
+  }
+
+  .footer-section {
+
+  }
+
+} 

@@ -3,60 +3,107 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { io } from "socket.io-client";
-import '../fonts.css';
-import './Admin.css';
-
+import "../fonts.css"; // alj font
+ 
 const socket = io("http://localhost:4000"); // Adjust the URL to match your backend server
-
+ 
 const Order = () => {
   const [orders, setOrders] = useState([]);
-  const notificationSound = useRef(null); // Ref for audio element
-
+  const notificationSound = useRef(new Audio("/NotificationSound.mp3"));
+  const [userInteracted, setUserInteracted] = useState(false);
+ 
   useEffect(() => {
-    notificationSound.current = new Audio("/NotificationSound.mp3");
-
     socket.on("initialOrders", (initialOrders) => {
       setOrders(initialOrders);
     });
-
+ 
     socket.on("orderReceived", (order) => {
-      setOrders((prevOrders) => [...prevOrders, order]);
-      handleNotificationSound();
+      setOrders((prevOrders) => [order, ...prevOrders]); // Add new order at the beginning
+      if (userInteracted) {
+        console.log("Playing notification sound...");
+        notificationSound.current.play().catch((error) => {
+          console.error("Audio playback error:", error);
+        });
+      } else {
+        console.log("User has not interacted yet. Sound will not play.");
+      }
       toast.success("New order received!");
     });
-
+ 
+    socket.on("orderConfirmed", (orderId) => {
+      setOrders((prevOrders) =>
+        prevOrders.filter((order) => order.id !== orderId)
+      );
+    });
+ 
     return () => {
       socket.off("initialOrders");
       socket.off("orderReceived");
+      socket.off("orderConfirmed");
     };
-  }, []);
-
-  const handleNotificationSound = () => {
-    if (notificationSound.current) {
-      notificationSound.current.play().catch((error) => {
-        console.error("Failed to play notification sound:", error);
-      });
-    }
+  }, [userInteracted]);
+ 
+  const handleUserInteraction = () => {
+    console.log("User interacted with the document.");
+    setUserInteracted(true);
   };
-
   const handleConfirmReceipt = (index) => {
+    const orderId = orders[index].id;
     const updatedOrders = orders.filter((_, i) => i !== index);
     setOrders(updatedOrders);
+    socket.emit("confirmReceipt", orderId);
+  
+    const orderItems = orders[index].items.reduce((acc, item) => {
+      const existingItem = acc.find((i) => i.name === item.name);
+      if (existingItem) {
+        existingItem.quantity += item.quantity;
+      } else {
+        acc.push(item);
+      }
+      return acc;
+    }, []);
+  
+    const orderOptions = orderItems.reduce((acc, item) => {
+      if (item.option) {
+        acc.push(item.option);
+      }
+      return acc;
+    }, []);
+  
+    const confirmationMessage = `Order confirmed! ${orders[index].name}  -  ${orders[index].department} `;
+    toast.success(confirmationMessage);
   };
-
-  const formatOrderItems = (items, temperature) => {
+  const formatOrderItems = (items) => {
     const itemMap = items.reduce((acc, item) => {
       if (!acc[item.name]) {
-        acc[item.name] = { ...item, options: [] };
+        acc[item.name] = {
+          ...item,
+          options: [],
+          temperature: new Set(),
+          quantity: 0,
+          sugarQuantities: item.sugarQuantities || {},
+        };
       }
-      acc[item.name].options.push(item.option);
+      if (item.option) {
+        acc[item.name].options.push(item.option);
+      }
+      if (item.temperature) {
+        acc[item.name].temperature.add(item.temperature);
+      } else {
+        acc[item.name].temperature.add("No temperature specified");
+      }
+      acc[item.name].quantity += item.quantity || 1;
       return acc;
     }, {});
-
+  
     return Object.values(itemMap).map((item) => ({
       ...item,
-      options: item.options.join(", "),
-      temperature: item.temperature,
+      options: item.options.length > 0 ? item.options.join(", ") : "without addition",
+      temperature: Array.from(item.temperature).join(", "),
+      sugarQuantities: Object.keys(item.sugarQuantities || {})
+        .filter((sugarType) => item.sugarQuantities[sugarType] > 0)
+        .map((sugarType) => `${sugarType}: ${item.sugarQuantities[sugarType]}`)
+        .join(", "),
     }));
   };
 
@@ -89,13 +136,11 @@ const Order = () => {
     textAlign: "center",
     padding: "10px 0",
   };
-
   const contentStyle = {
     paddingTop: "70px", // Add padding to prevent content from being hidden behind the header
     paddingBottom: "70px", // Add padding to prevent content from being hidden behind the footer
   };
-
-  // Button styling
+ 
   const buttonStyle = {
     backgroundColor: "rgba(66, 136, 148, 0.89)", // Set the background color to blue
     color: "white", // Set the text color to white
@@ -104,28 +149,31 @@ const Order = () => {
     cursor: "pointer", // Change the cursor on hover
     borderRadius: "100px", // Add rounded corners
   };
-
+ 
   const buttonHoverStyle = {
     backgroundColor: "rgba(24, 112, 134, 1)",
   };
-
+ 
   return (
-    
-    <div className=" custom-font  container mt-5" style={contentStyle}>
+    <div
+      className="container mt-5"
+      style={contentStyle}
+      onClick={handleUserInteraction}
+      onKeyDown={handleUserInteraction}
+    >
       <header style={headerStyle}>
-        <h1 className=" custom-font  header-title" style={{  color:"gray" }}>ORDER</h1>
-        <img className="header-imge"  src="/logo3.png" alt="Logo" style={{ height: "50px" }} />
+        <h1 className="custom-font">Orders</h1>
+        <img className="header-imge" src="/logo3.png" alt="Logo" style={{ height: "50px" }} />
       </header>
       <ToastContainer />
-
+ 
       <div className="d-flex flex-column align-items-center">
-        {/* Center the cards */}
         {orders.map((order, index) => {
           const isSpecialDepartment =
             order.department === "Chairman Office" ||
             order.department === "CEO Office";
           const borderColor = isSpecialDepartment ? "red" : "green";
-
+ 
           return (
             <div
               key={index}
@@ -136,25 +184,31 @@ const Order = () => {
                 border: `2px solid ${borderColor}`, // Set border color based on department
               }}
             >
-              <div className="card-body text-center">
+              <div className="card-body d-flex flex-column align-items-center">
                 <h5 className="card-title">
                   {order.name} - {order.department}
                 </h5>
-                <ul className="list-group list-group-flush">
-                  {formatOrderItems(order.items, order.temperature).map(
-                    (item, idx) => (
-                      <li key={idx} className="list-group-item text-center">
-                        {item.name} ({item.options}) -{" "}
-                        {item.temperature || "Default"}
-                      </li>
-                    )
-                  )}
-                </ul>
-                {order.comment && (
-                  <p className="mt-3 text-center">
-                    <strong>Comment:</strong> {order.comment}
-                  </p>
-                )}
+                <ul className="list-group">
+  {formatOrderItems(order.items).map((item, idx) => (
+    <li key={idx} className="list-group-item">
+      <div className="d-flex justify-content-between">
+        <span>
+          {item.name} ({item.options}) {item.milkAddition}
+        </span>
+        <span>
+          x{item.quantity} - {item.temperature || "No temperature specified"}
+        </span>
+      </div>
+      Sugar Quantities: {item.sugarQuantities && (
+        <ul>
+          {item.sugarQuantities.split(", ").map((sugarTypeQuantity) => (
+            <li key={sugarTypeQuantity}>{sugarTypeQuantity}</li>
+          ))}
+        </ul>
+      )}
+    </li>
+  ))}
+</ul>
                 <button
                   className="btn mt-3"
                   onClick={() => handleConfirmReceipt(index)}
@@ -175,11 +229,11 @@ const Order = () => {
           );
         })}
       </div>
-      <footer className="custom-font  footer-section" style={footerStyle}>
-        <p >&copy; 2024 Abdul Latif Jameel Café. All Rights Reserved.</p>
+      <footer style={footerStyle} className="custom-font">
+        <p>&copy; 2024 Abdul Latif Jameel Café. All Rights Reserved.</p>
       </footer>
     </div>
   );
 };
-
+ 
 export default Order;

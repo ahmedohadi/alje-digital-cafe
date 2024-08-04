@@ -1,4 +1,3 @@
-/* Done by: Jana Hani Sandeyouni */
 
 /* Font */
 @import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&family=Lobster+Two:ital,wght@0,400;0,700;1,400;1,700&display=swap');
@@ -311,6 +310,7 @@ font-size: 15px;
 .cta{
   width:100%;
   background-image: url(../../public/Jameel75_bg.jpg);
+  background-repeat: no-repeat;
   background-position: center;
   background-size: 1100px;
   text-align: center;
@@ -741,6 +741,9 @@ position: relative;
   pointer-events: none; /* Ensure the icon doesn't block input */
 }
 
+.cups{
+  margin-right: 20px;
+}
 
 .scroll-up-button, .scroll-down-button {
   position: fixed;
@@ -794,3 +797,22 @@ position: relative;
   font-size: 24px;
 }
 
+
+.sugar-options-card input[type="checkbox"] {
+  margin-right: 8px;
+  display:inline-block;
+} 
+
+
+.btn-suger {
+  border-radius: 5px;
+}
+
+
+.cards.error input[type="radio"] {
+  outline: 1px solid red;
+}
+
+.btn-suger{
+  width: 25px;
+}

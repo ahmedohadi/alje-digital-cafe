@@ -172,30 +172,30 @@ const Menu = () => {
     const handleCheckboxChange = (e, item) => {
       const { name, checked } = e.target;
       let items = [...order.items]; // Create a new copy of the array
-    
-      // if (name === "Milk") {
-      //   const existingItem = items.find((orderItem) => orderItem.name === item.name);
-      //   if (checked) {
-      //     if (existingItem) {
-      //       existingItem.option = "Milk";
-      //     } else {
-      //       items.push({...item, option: "Milk", temperature: order.temperature[item.name] });
-      //     }
-      //   } else {
-      //     if (existingItem) {
-      //       existingItem.option = undefined;
-      //     }
-      //   }
-      // } else { // Handle other checkboxes as before
+   
+      if (name === "Milk") {
+        const existingItem = items.find((orderItem) => orderItem.name === item.name);
         if (checked) {
-          items.push({...item, option: name, temperature: order.temperature[item.name] });
+          if (existingItem) {
+            existingItem.option = "Milk";
+          } else {
+            items.push({ ...item, option: "Milk", temperature: order.temperature[item.name] });
+          }
         } else {
-          items = items.filter((orderItem) => orderItem.name!== item.name);
+          if (existingItem) {
+            existingItem.option = undefined;
+          }
+        }
+      } else { // Handle other checkboxes as before
+        if (checked) {
+          items.push({ ...item, option: name, temperature: order.temperature[item.name] });
+        } else {
+          items = items.filter((orderItem) => orderItem.name !== item.name);
         }
         // Initialize sugar quantities for the menu item if it doesn't exist
         if (!sugarQuantities[item.name]) {
           setSugarQuantities((prevSugarQuantities) => ({
-           ...prevSugarQuantities,
+            ...prevSugarQuantities,
             [item.name]: {
               white: 0,
               brown: 0,
@@ -203,11 +203,10 @@ const Menu = () => {
             },
           }));
         }
-      
-    
-      setOrder({...order, items });
+      }
+   
+      setOrder({ ...order, items });
     };
-
     // const handleCheckboxChange = (e, item) => {
     //   const { name, checked } = e.target;
     //   let items = order.items;
@@ -263,11 +262,11 @@ const Menu = () => {
     
         const nameInput = document.querySelector('.name2');
         const departmentSelect = document.querySelector('.dep2');
-        const menuItemsSection = document.querySelector('.menu-section');
+        
     
         if (nameInput) nameInput.classList.remove('error');
         if (departmentSelect) departmentSelect.classList.remove('error');
-        if (menuItemsSection) menuItemsSection.classList.remove('error');
+        
     
         if (order.name.trim() === '') {
             if (nameInput) {
@@ -287,14 +286,7 @@ const Menu = () => {
             }
         }
     
-        if (order.items.length === 0) {
-            if (menuItemsSection) {
-                menuItemsSection.scrollIntoView({ behavior: 'smooth' });
-                menuItemsSection.focus();
-                menuItemsSection.classList.add('error');
-                hasError = true;
-            }
-        }
+       
     
         // Check if temperature is selected for each item
       order.items.forEach((item) => {
@@ -772,11 +764,13 @@ const Menu = () => {
           <p><strong>Name:</strong> {order.name}</p>
           <p><strong>Department:</strong> {order.department}</p>
           <p><strong>Items:</strong> {order.items.map((item) => `${item.name} x ${quantities[item.name]}`).join(', ')}</p> 
-          <p><strong>Milk addition:</strong> {Object.entries(order.items.reduce((acc, item) => {
-  acc[item.name] = item.option === "Milk" ? `${item.name} (Milk)` : `${item.name} (Without Milk)`;
-  return acc;
-}, {})).map(([key, value]) => value).join(', ')}</p>
-
+          <p>
+  <strong>Milk addition:</strong>{" "}
+  {Object.entries(order.items.reduce((acc, item) => {
+    acc[item.name] = item.option === "Milk" ? `${item.name} (Milk)` : `${item.name} (Without Milk)`;
+    return acc;
+  }, {})).map(([key, value]) => value).join(", ")}
+</p>
           <p><strong>Sugar Quantities:</strong> {order.items.map((item) => `${item.name}: ${JSON.stringify(item.sugarQuantities)}`).join(', ')}</p>
           <p><strong>Temperature:</strong> {Object.keys(order.temperature).map((item) => `${item}: ${order.temperature[item]}`).join(', ')}</p>
         </div>

@@ -2,58 +2,58 @@ import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { io } from "socket.io-client";
 import "../fonts.css";
- 
+
 const socket = io("http://localhost:4000");
- 
+
 const Admin = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [newItem, setNewItem] = useState({ name: "", options: "" });
   const [image, setImage] = useState(null);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
- 
+
   useEffect(() => {
     socket.on("initialMenuItems", (initialMenuItems) => {
       setMenuItems(initialMenuItems);
     });
- 
+
     socket.on("menuItemAdded", (addedItem) => {
       setMenuItems((prevMenuItems) => [...prevMenuItems, addedItem]);
     });
- 
+
     socket.on("menuItemDeleted", (deletedItem) => {
       setMenuItems((prevMenuItems) =>
         prevMenuItems.filter((item) => item.name !== deletedItem.name)
       );
     });
- 
+
     return () => {
       socket.off("initialMenuItems");
       socket.off("menuItemAdded");
       socket.off("menuItemDeleted");
     };
   }, []);
- 
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewItem({ ...newItem, [name]: value });
   };
- 
+
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
   };
- 
+
   const handleAddItem = async () => {
     if (newItem.name && image) {
       const formData = new FormData();
       formData.append("image", image);
- 
+
       try {
         const response = await fetch("http://localhost:4000/upload", {
           method: "POST",
           body: formData,
         });
- 
+
         if (response.ok) {
           const data = await response.json();
           const itemToAdd = {
@@ -72,18 +72,18 @@ const Admin = () => {
       }
     }
   };
- 
+
   const handleDeleteItem = (item) => {
     setItemToDelete(item);
     setShowDeleteConfirmation(true);
   };
- 
+
   const confirmDeleteItem = () => {
     socket.emit("deleteMenuItem", itemToDelete);
     setShowDeleteConfirmation(false);
     setItemToDelete(null);
   };
- 
+
   const headerStyle = {
     position: "fixed",
     top: 0,
@@ -112,19 +112,18 @@ const Admin = () => {
     padding: "10px 0",
   };
 
- 
   const contentStyle = {
     paddingTop: "70px",
     paddingBottom: "70px",
   };
- 
+
   return (
     <div className="custom-font">
       <div className="container mt-5" style={contentStyle}>
-      <header style={headerStyle} >
-        <h1 className="custom-font  header-title " style={{color:"gray" }}>Admin Panel</h1>
-        <img className="header-imge" src="/logo3.png" alt="Logo" style={{ height: "50px" }} />
-      </header>
+        <header style={headerStyle}>
+          <h1 className="custom-font  header-title " style={{ color: "gray" }}>Admin Panel</h1>
+          <img className="header-imge" src="/logo3.png" alt="Logo" style={{ height: "50px" }} />
+        </header>
         <div className="form-group row">
           <label htmlFor="name" className="col-sm-2 col-form-label">
             Item Name
@@ -171,7 +170,7 @@ const Admin = () => {
             {image && <p className="mt-2">{image.name}</p>}
           </div>
         </div>
- 
+
         <div className="d-flex justify-content-center">
           <button
             className="btn btn-secondary"
@@ -188,7 +187,7 @@ const Admin = () => {
             Save
           </button>
         </div>
- 
+
         <hr />
         {menuItems.map((item, index) => (
           <div key={index} className="card my-2">
@@ -266,5 +265,5 @@ const Admin = () => {
     </div>
   );
 };
- 
+
 export default Admin;

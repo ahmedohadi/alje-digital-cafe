@@ -40,20 +40,23 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
  
 let orders = [];
 let menuItems = [
-  { name: "Espresso", options: ["Single", "Double"] },
-  { name: "Black Coffee", options: ["Hot", "Cold", "Sugar", "Milk"] },
-  { name: "Cappuccino", options: ["Hot", "Cold", "Sugar"] },
-  { name: "Turkish Coffee", options: ["Hot", "Cold", "Sugar", "Milk"] },
-  { name: "Special Coffee", options: ["Hot", "Cold", "Sugar", "Milk"] },
-  { name: "Latte", options: ["Hot", "Cold", "Sugar"] },
-  { name: "Ristretto", options: ["Hot", "Cold", "Sugar", "Milk"] },
-  { name: "Arabic Coffee", options: ["Hot", "Cold", "Sugar"] },
-  { name: "Flat White", options: ["Hot", "Cold", "Sugar"] },
-  { name: "Nescafe", options: ["Hot", "Cold", "Sugar", "Milk"] },
-  { name: "Nescafe 3 in 1", options: ["Hot", "Cold", "Sugar", "Milk"] },
-  { name: "Green Tea", options: ["Hot", "Cold", "Sugar", "Milk"] },
-  { name: "Red Tea", options: ["Hot", "Cold", "Sugar", "Milk"] },
+  { name: "Espresso", options: [] },
+  { name: "Black Coffee", options: [] },
+  { name: "Cappuccino", options: [] },
+  { name: "Turkish Coffee", options: [] },
+  { name: "Special Coffee", options: [] },
+  { name: "Latte", options: [ ] },
+  { name: "Ristretto", options: [] },
+  { name: "Arabic Coffee", options: [] },
+  { name: "Flat White", options: [] },
+  { name: "Nescafe", options: [] },
+  { name: "Nescafe 3 in 1", options: [] },
+  { name: "Green Tea", options: [] },
+  { name: "Red Tea", options: [] },
+  { name: "Water", options: ["Ice", "Warm"] }, // Add water options
+  { name: "Ice Cubes", options: [] }, // Add ice cube options
 ];
+
  
  
 io.on("connection", (socket) => {

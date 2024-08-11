@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { io } from "socket.io-client";
-import "../fonts.css"; // alj font
+import "../fonts.css"; // Custom font
 
 const socket = io("http://localhost:4000"); // Adjust the URL to match your backend server
 
@@ -18,14 +18,11 @@ const Order = () => {
     });
 
     socket.on("orderReceived", (order) => {
-      setOrders((prevOrders) => sortOrders([order, ...prevOrders])); // Add new order at the beginning
+      setOrders((prevOrders) => sortOrders([order, ...prevOrders]));
       if (userInteracted) {
-        console.log("Playing notification sound...");
         notificationSound.current.play().catch((error) => {
           console.error("Audio playback error:", error);
         });
-      } else {
-        console.log("User has not interacted yet. Sound will not play.");
       }
       toast.success("New order received!");
     });
@@ -44,14 +41,13 @@ const Order = () => {
   }, [userInteracted]);
 
   const sortOrders = (orders) => {
-    return orders.sort((a, b) => {
-      const priority = { "Chairman Office": 1, "CEO Office": 2 };
-      return (priority[a.department] || 3) - (priority[b.department] || 3);
-    });
+    const priority = { "Chairman Office": 1, "CEO Office": 2 };
+    return orders.sort(
+      (a, b) => (priority[a.department] || 3) - (priority[b.department] || 3)
+    );
   };
 
   const handleUserInteraction = () => {
-    console.log("User interacted with the document.");
     setUserInteracted(true);
   };
 
@@ -89,13 +85,16 @@ const Order = () => {
     }, {});
 
     return Object.values(itemMap).map((item) => {
-      const options =
-        Object.keys(item.options)
-          .filter((option) => item.options[option])
-          .join(", ") || "None";
+      const options = Object.keys(item.options)
+        .filter((option) => item.options[option])
+        .join(", ");
+
+      const espressoOption =
+        item.name === "Espresso" && item.option ? ` (${item.option})` : "";
+
       return {
         ...item,
-        options,
+        options: options + espressoOption,
         temperature: Array.from(item.temperature).join(", "),
         sugarQuantities: Object.keys(item.sugarQuantities || {})
           .filter((sugarType) => item.sugarQuantities[sugarType] > 0)
@@ -113,7 +112,7 @@ const Order = () => {
     width: "100%",
     left: 0,
     backgroundColor: "rgba(230, 238, 242)",
-    color: "gray", // Change the text color to gray
+    color: "gray",
     textAlign: "center",
     padding: "10px 0",
     display: "flex",
@@ -136,17 +135,17 @@ const Order = () => {
   };
 
   const contentStyle = {
-    paddingTop: "70px", // Add padding to prevent content from being hidden behind the header
-    paddingBottom: "70px", // Add padding to prevent content from being hidden behind the footer
+    paddingTop: "70px",
+    paddingBottom: "70px",
   };
 
   const buttonStyle = {
-    backgroundColor: "rgba(66, 136, 148, 0.89)", // Set the background color to blue
-    color: "white", // Set the text color to white
-    border: "none", // Remove the border
-    padding: "10px 20px", // Add some padding
-    cursor: "pointer", // Change the cursor on hover
-    borderRadius: "100px", // Add rounded corners
+    backgroundColor: "rgba(66, 136, 148, 0.89)",
+    color: "white",
+    border: "none",
+    padding: "10px 20px",
+    cursor: "pointer",
+    borderRadius: "100px",
   };
 
   const buttonHoverStyle = {

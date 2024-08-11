@@ -22,6 +22,7 @@ const Menu = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [filteredMenuItems, setFilteredMenuItems] = useState([]);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showValidationMessage, setShowValidationMessage] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [quantities, setQuantities] = useState({});
   const [sugarQuantities, setSugarQuantities] = useState({});
@@ -31,6 +32,7 @@ const Menu = () => {
   const SubmitOrderSectionRef = useRef(null);
   const HeaderSectionRef = useRef(null);
   const departmentSelectRef = useRef(null);
+  const [waterValidation, setWaterValidation] = useState(false);
   
   const predefinedItems = [
     "Black Coffee",
@@ -147,7 +149,7 @@ const Menu = () => {
 
       const initialQuantities = {};
       initialMenuItems.forEach((item) => {
-        initialQuantities[item.name] = 0; // Default quantity is 0
+        initialQuantities[item.name] = 0;
       });
       setQuantities(initialQuantities);
     });
@@ -200,15 +202,14 @@ const Menu = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setOrder({ ...order, [name]: value });
-  
-    // Remove red outline when the field is filled
+
     if (name === "name" && value.trim() !== "") {
       const nameInput = document.querySelector(".name2");
       if (nameInput) {
         nameInput.classList.remove("error");
       }
     }
-  
+
     if (name === "department" && value.trim() !== "") {
       const departmentSelect = document.querySelector(".dep2");
       if (departmentSelect) {
@@ -216,7 +217,6 @@ const Menu = () => {
       }
     }
   };
-  
 
   const handleIncrement = (itemName) => {
     setQuantities((prevQuantities) => {
@@ -224,8 +224,12 @@ const Menu = () => {
         ...prevQuantities,
         [itemName]: prevQuantities[itemName] + 1,
       };
-  
-      // Remove the red outline when the quantity is increased
+
+      if (itemName === "Water" && !order.temperature[itemName]) {
+        setWaterValidation(true);
+      }
+
+
       if (newQuantities[itemName] > 0) {
         const quantityControl = document.querySelector(
           `.cards[data-item-name="${itemName}"] .quantity-controls`
@@ -234,17 +238,15 @@ const Menu = () => {
           quantityControl.classList.remove("error-outline");
         }
       }
-  
+
       return newQuantities;
     });
   };
-  
-  
 
   const handleDecrement = (itemName) => {
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
-      [itemName]: Math.max(0, prevQuantities[itemName] - 1), // Minimum quantity is 0
+      [itemName]: Math.max(0, prevQuantities[itemName] - 1),
     }));
   };
 
@@ -267,9 +269,9 @@ const Menu = () => {
         },
       };
 
-      const hasSugarQuantity = Object.values(updatedSugarQuantities[itemName]).some(
-        (quantity) => quantity > 0
-      );
+      const hasSugarQuantity = Object.values(
+        updatedSugarQuantities[itemName]
+      ).some((quantity) => quantity > 0);
 
       if (hasSugarQuantity) {
         const sugarTypeElement = document.querySelector(
@@ -290,11 +292,11 @@ const Menu = () => {
     const existingItemIndex = updatedItems.findIndex(
       (orderItem) => orderItem.name === item.name
     );
-   
+
     const itemOptions = order.options[item.name] || {};
-   
+
     itemOptions[name] = checked;
-   
+
     if (existingItemIndex !== -1) {
       updatedItems[existingItemIndex] = {
         ...updatedItems[existingItemIndex],
@@ -305,26 +307,25 @@ const Menu = () => {
         ...item,
         options: itemOptions,
         temperature: order.temperature[item.name],
-        option: order.espressoOptions[item.name], // Ensure to keep the option field for Espresso
+        option: order.espressoOptions[item.name],
       });
     }
-   
-    // Remove item from the order if no options are selected and it's not espresso
+
     const filteredItems = updatedItems.filter(
       (orderItem) =>
-        (Object.values(orderItem.options || {}).some((option) => option) ||
+        Object.values(orderItem.options || {}).some((option) => option) ||
         orderItem.name === "Water" ||
         orderItem.name === "Ice Cubes" ||
-        orderItem.name === "Espresso") // Keep espresso in the order
+        orderItem.name === "Espresso"
     );
-   
+
     setOrder({
       ...order,
       items: filteredItems,
       options: { ...order.options, [item.name]: itemOptions },
     });
   };
-   
+
   const handleRadioChange = (e, item) => {
     const { value } = e.target;
     const updatedItems = order.items.map((orderItem) =>
@@ -336,26 +337,31 @@ const Menu = () => {
           }
         : orderItem
     );
-   
+
+    if (item.name === "Water") {
+      setWaterValidation(false);
+    }
+
+
     const existingItemIndex = updatedItems.findIndex(
       (orderItem) => orderItem.name === item.name
     );
-   
+
     if (existingItemIndex === -1) {
       updatedItems.push({
         ...item,
         temperature: value,
         options: order.options[item.name] || {},
-        option: order.espressoOptions[item.name], // Ensure to keep the option field for Espresso
+        option: order.espressoOptions[item.name],
       });
     }
-   
+
     setOrder({
       ...order,
       items: updatedItems,
       temperature: { ...order.temperature, [item.name]: value },
     });
-   
+
     if (
       item.name !== "Water" &&
       item.name !== "Ice Cubes" &&
@@ -369,7 +375,7 @@ const Menu = () => {
       }
     }
   };
-   
+
   const handleEspressoOptionChange = (e, item) => {
     const { value } = e.target;
     const updatedItems = order.items.map((orderItem) =>
@@ -382,11 +388,11 @@ const Menu = () => {
           }
         : orderItem
     );
-   
+
     const existingItemIndex = updatedItems.findIndex(
       (orderItem) => orderItem.name === item.name
     );
-   
+
     if (existingItemIndex === -1) {
       updatedItems.push({
         ...item,
@@ -395,13 +401,13 @@ const Menu = () => {
         options: order.options[item.name] || {},
       });
     }
-   
+
     setOrder({
       ...order,
       items: updatedItems,
       espressoOptions: { ...order.espressoOptions, [item.name]: value },
     });
-   
+
     const radioButtons = document.querySelectorAll(
       `input[name="${item.name}-option"]`
     );
@@ -410,16 +416,14 @@ const Menu = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     let hasError = false;
     const nameInput = document.querySelector(".name2");
     const departmentSelect = document.querySelector(".dep2");
-  
-    // Reset previous error states
+
     if (nameInput) nameInput.classList.remove("error");
     if (departmentSelect) departmentSelect.classList.remove("error");
-  
-    // Validate name
+
     if (order.name.trim() === "") {
       if (nameInput) {
         nameInput.scrollIntoView({ behavior: "smooth" });
@@ -428,8 +432,7 @@ const Menu = () => {
         hasError = true;
       }
     }
-  
-    // Validate department
+
     if (order.department.trim() === "") {
       if (departmentSelect) {
         departmentSelect.scrollIntoView({ behavior: "smooth" });
@@ -438,8 +441,7 @@ const Menu = () => {
         hasError = true;
       }
     }
-  
-    // Check if temperature is selected for each item, excluding "Water" and "Ice Cubes"
+
     order.items.forEach((item) => {
       if (item.name !== "Water" && item.name !== "Ice Cubes") {
         const temperatureInput = document.querySelector(
@@ -456,7 +458,7 @@ const Menu = () => {
           }
         }
       }
-  
+
       if (item.name === "Espresso") {
         const espressoOptionInput = document.querySelector(
           `input[name="${item.name}-option"]:checked`
@@ -466,7 +468,7 @@ const Menu = () => {
             `input[name="${item.name}-option"]`
           );
           radioButtons.forEach((radio) => radio.classList.add("error"));
-  
+
           const menuItemCard = document.querySelector(
             `.cards[data-item-name="${item.name}"]`
           );
@@ -476,7 +478,7 @@ const Menu = () => {
           }
         }
       }
-  
+
       if (
         order.options[item.name]?.sugar &&
         !Object.values(sugarQuantities[item.name] || {}).some((qty) => qty > 0)
@@ -491,14 +493,15 @@ const Menu = () => {
         }
       }
     });
-  
-    // Check if at least one item has a quantity greater than 0
+
     const itemsWithZeroQuantity = order.items.filter(
       (item) =>
         quantities[item.name] === 0 &&
-        (order.options[item.name] || order.temperature[item.name] || order.espressoOptions[item.name])
+        (order.options[item.name] ||
+          order.temperature[item.name] ||
+          order.espressoOptions[item.name])
     );
-  
+
     if (itemsWithZeroQuantity.length > 0) {
       itemsWithZeroQuantity.forEach((item) => {
         const quantityControl = document.querySelector(
@@ -512,20 +515,26 @@ const Menu = () => {
       });
       alert("Please increase the cup quantity for all selected items.");
     }
-  
+
+    if (order.items.length === 0) {
+      setShowValidationMessage(true);
+      hasError = true;
+    } else {
+      setShowValidationMessage(false);
+    }
+
     if (!hasError) {
       const itemsWithQuantities = order.items.map((item) => ({
         ...item,
         quantity: quantities[item.name],
         sugarQuantities: formatSugarQuantities(sugarQuantities[item.name]),
-        option: order.espressoOptions[item.name], // Ensure to keep the option field for Espresso
+        option: order.espressoOptions[item.name],
       }));
       setOrder({ ...order, items: itemsWithQuantities });
       setShowConfirmation(true);
     }
   };
-  
-  
+
   const formatSugarQuantities = (sugarQuantities) => {
     const formattedSugarQuantities = {};
     if (sugarQuantities && sugarQuantities.white) {
@@ -541,8 +550,8 @@ const Menu = () => {
   };
 
   const confirmOrder = () => {
-    console.log('departmentSelectRef:', departmentSelectRef.current);
-  
+    console.log("departmentSelectRef:", departmentSelectRef.current);
+
     const newOrder = {
       ...order,
       items: order.items.map((item) => ({
@@ -551,14 +560,13 @@ const Menu = () => {
         quantity: quantities[item.name],
         options: order.options[item.name] || {},
         sugarQuantities: sugarQuantities[item.name] || {},
-        option: order.espressoOptions[item.name] || "", // Ensure to keep the option field for Espresso
+        option: order.espressoOptions[item.name] || "",
       })),
     };
-  
+
     socket.emit("newOrder", newOrder);
     setShowConfirmation(false);
-  
-    // Reset order state
+
     setOrder({
       name: "",
       department: "",
@@ -567,32 +575,25 @@ const Menu = () => {
       options: {},
       espressoOptions: {},
     });
-  
-    // Reset quantities and sugarQuantities states
+
     setQuantities(
       menuItems.reduce((acc, item) => ({ ...acc, [item.name]: 1 }), {})
     );
     setSugarQuantities({});
-  
-    // Reset filteredMenuItems to show all items
+
     setFilteredMenuItems(menuItems);
-  
-    // Reset form fields
+
     document.getElementById("orderForm").reset();
-  
-    // Manually reset department select, only if ref exists
+
     if (departmentSelectRef.current) {
       setOrder((prevOrder) => ({
         ...prevOrder,
         department: "",
       }));
     }
-    
-  
+
     alert("Thanks for ordering! Your coffee will be delivered to you soon.");
   };
-  
-  
 
   const cancelOrder = () => {
     setShowConfirmation(false);
@@ -628,8 +629,8 @@ const Menu = () => {
     "Turkish Coffee": "/Turkish-Coffee.jpeg",
     Nescafe: "/Nescafe.jpeg",
     "Nescafe 3 in 1": "/Nescafe.jpeg",
-    Water: "/water.jpeg", // Add water image
-    "Ice Cubes": "/ice_cubes.jpeg", // Add ice cube image
+    Water: "/water.jpeg",
+    "Ice Cubes": "/ice_cubes.jpeg",
   };
 
   return (
@@ -679,8 +680,7 @@ const Menu = () => {
               </div>
 
               <div className="hero-overlay">
-
-              <form className="form-s mt-3">
+                <form className="form-s mt-3">
                   <div className="row mb-3 ">
                     <div className="col">
                       <input
@@ -696,21 +696,19 @@ const Menu = () => {
                     </div>
                     <div className="col">
                       <div className="form-control custom-font p-0 dep2">
-                      <Select
-  ref={departmentSelectRef}
-  classNamePrefix="dep2"
-  name="department"
-  options={departmentOptions}
-  menuPlacement="top"
-  value={departmentOptions.find(
-    (option) => option.value === order.department
-  )}
-  onChange={handleDepartmentChange}
-  placeholder="Department"
-  required
-/>
-
-
+                        <Select
+                          ref={departmentSelectRef}
+                          classNamePrefix="dep2"
+                          name="department"
+                          options={departmentOptions}
+                          menuPlacement="top"
+                          value={departmentOptions.find(
+                            (option) => option.value === order.department
+                          )}
+                          onChange={handleDepartmentChange}
+                          placeholder="Department"
+                          required
+                        />
                       </div>
                     </div>
                   </div>
@@ -766,7 +764,10 @@ const Menu = () => {
                           id={`${item.name}-cup`}
                           name="cup of ice cubes"
                           onChange={(e) => handleCheckboxChange(e, item)}
-                          checked={order.options[item.name]?.["cup of ice cubes"] || false}
+                          checked={
+                            order.options[item.name]?.["cup of ice cubes"] ||
+                            false
+                          }
                         />
                         <label
                           className="form-check-label"
@@ -781,7 +782,7 @@ const Menu = () => {
                       <>
                         <div className="form-check">
                           <input
-                            className="form-check-input"
+                            className="form-check-input "
                             type="radio"
                             id={`${item.name}-Cold`}
                             name={`${item.name}-temperature`}
@@ -932,8 +933,9 @@ const Menu = () => {
                                       -
                                     </button>
                                     <span className="mx-2">
-                                      {sugarQuantities[item.name]?.[sugarType] ||
-                                        0}
+                                      {sugarQuantities[item.name]?.[
+                                        sugarType
+                                      ] || 0}
                                     </span>
                                     <button
                                       type="button"
@@ -984,7 +986,9 @@ const Menu = () => {
                               id={`${item.name}-${option}`}
                               name={`${item.name}-option`}
                               value={option}
-                              checked={order.espressoOptions[item.name] === option}
+                              checked={
+                                order.espressoOptions[item.name] === option
+                              }
                               onChange={(e) =>
                                 handleEspressoOptionChange(e, item)
                               }
@@ -1028,26 +1032,32 @@ const Menu = () => {
             ))}
           </div>
 
-          <form id="orderForm" onSubmit={handleSubmit} className="container">
-              <div className="row justify-content-center">
-                <div className="col-12 col-md-6 col-lg-4">
-                  <button
-                    type="submit"
-                    className="btn btn-primary btn-block mt-4 order-now-button"
-                    ref={SubmitOrderSectionRef}
-                    style={{
-                      backgroundColor: "rgba(82, 133, 154)",
-                      color: "white",
-                      border: "none",
-                      width: "100%",
-                      marginBottom: "0",
-                    }}
-                  >
-                    Submit Order
-                  </button>
-                </div>
-              </div>
-            </form>
+          <form id="orderForm" onSubmit={handleSubmit} className="container custom-font">
+  <div className="row justify-content-center">
+    <div className="col-12 col-md-6 col-lg-4">
+      <button
+        type="submit"
+        className="btn btn-primary btn-block mt-4 order-now-button"
+        ref={SubmitOrderSectionRef}
+        style={{
+          backgroundColor: "rgba(82, 133, 154)",
+          color: "white",
+          border: "none",
+          width: "100%",
+          marginBottom: "0",
+        }}
+      >
+        Submit Order
+      </button>
+    </div>
+  </div>
+</form>
+
+          {showValidationMessage && (
+            <div className="alert alert-danger mt-4 text-center">
+              Please place an order.
+            </div>
+          )}
 
           <div className="scroll-buttons" ref={scrollButtonsRef}>
             <button
@@ -1103,8 +1113,12 @@ const Menu = () => {
                             const options = Object.keys(item.options || {})
                               .filter((option) => item.options[option])
                               .join(", ");
-                            const espressoOption = item.option ? ` (${item.option})` : "";
-                            return `${item.name} (${options}${espressoOption}) x ${
+                            const espressoOption = item.option
+                              ? ` (${item.option})`
+                              : "";
+                            return `${
+                              item.name
+                            } (${options}${espressoOption}) x ${
                               quantities[item.name]
                             }`;
                           })
@@ -1142,7 +1156,10 @@ const Menu = () => {
                       <div className="d-flex align-items-center mb-2">
                         <strong className="me-2">Temperature:</strong>{" "}
                         {Object.keys(order.temperature)
-                          .map((item) => `${item}: ${order.temperature[item]}`)
+                          .map(
+                            (item) =>
+                              `${item}: ${order.temperature[item]}`
+                          )
                           .join(", ")}
                       </div>
                     </div>
@@ -1172,7 +1189,7 @@ const Menu = () => {
       <footer className="footer opacity-55 custom-font">
         <div className="footer-container">
           <p className="footer-text">
-            © 2024 Abdul Latif Jameel Enterprises. All rights reserved.
+            ©️ 2024 Abdul Latif Jameel Enterprises. All rights reserved.
           </p>
         </div>
       </footer>

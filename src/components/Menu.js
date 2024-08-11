@@ -1,5 +1,3 @@
-//Done by: Jana Hani sandeyouni
-
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
@@ -32,7 +30,8 @@ const Menu = () => {
   const CarouselSectionRef = useRef(null);
   const SubmitOrderSectionRef = useRef(null);
   const HeaderSectionRef = useRef(null);
-
+  const departmentSelectRef = useRef(null);
+  
   const predefinedItems = [
     "Black Coffee",
     "Espresso",
@@ -148,7 +147,7 @@ const Menu = () => {
 
       const initialQuantities = {};
       initialMenuItems.forEach((item) => {
-        initialQuantities[item.name] = 1; // Default quantity is 1
+        initialQuantities[item.name] = 0; // Default quantity is 0
       });
       setQuantities(initialQuantities);
     });
@@ -201,14 +200,15 @@ const Menu = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setOrder({ ...order, [name]: value });
-
+  
+    // Remove red outline when the field is filled
     if (name === "name" && value.trim() !== "") {
       const nameInput = document.querySelector(".name2");
       if (nameInput) {
         nameInput.classList.remove("error");
       }
     }
-
+  
     if (name === "department" && value.trim() !== "") {
       const departmentSelect = document.querySelector(".dep2");
       if (departmentSelect) {
@@ -216,18 +216,35 @@ const Menu = () => {
       }
     }
   };
+  
 
   const handleIncrement = (itemName) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [itemName]: prevQuantities[itemName] + 1,
-    }));
+    setQuantities((prevQuantities) => {
+      const newQuantities = {
+        ...prevQuantities,
+        [itemName]: prevQuantities[itemName] + 1,
+      };
+  
+      // Remove the red outline when the quantity is increased
+      if (newQuantities[itemName] > 0) {
+        const quantityControl = document.querySelector(
+          `.cards[data-item-name="${itemName}"] .quantity-controls`
+        );
+        if (quantityControl) {
+          quantityControl.classList.remove("error-outline");
+        }
+      }
+  
+      return newQuantities;
+    });
   };
+  
+  
 
   const handleDecrement = (itemName) => {
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
-      [itemName]: Math.max(1, prevQuantities[itemName] - 1), // Minimum quantity is 1
+      [itemName]: Math.max(0, prevQuantities[itemName] - 1), // Minimum quantity is 0
     }));
   };
 
@@ -273,11 +290,11 @@ const Menu = () => {
     const existingItemIndex = updatedItems.findIndex(
       (orderItem) => orderItem.name === item.name
     );
-
+   
     const itemOptions = order.options[item.name] || {};
-
+   
     itemOptions[name] = checked;
-
+   
     if (existingItemIndex !== -1) {
       updatedItems[existingItemIndex] = {
         ...updatedItems[existingItemIndex],
@@ -291,34 +308,39 @@ const Menu = () => {
         option: order.espressoOptions[item.name], // Ensure to keep the option field for Espresso
       });
     }
-
-    // Remove item from the order if no options are selected
+   
+    // Remove item from the order if no options are selected and it's not espresso
     const filteredItems = updatedItems.filter(
       (orderItem) =>
-        Object.values(orderItem.options || {}).some((option) => option) ||
+        (Object.values(orderItem.options || {}).some((option) => option) ||
         orderItem.name === "Water" ||
-        orderItem.name === "Ice Cubes"
+        orderItem.name === "Ice Cubes" ||
+        orderItem.name === "Espresso") // Keep espresso in the order
     );
-
+   
     setOrder({
       ...order,
       items: filteredItems,
       options: { ...order.options, [item.name]: itemOptions },
     });
   };
-
+   
   const handleRadioChange = (e, item) => {
     const { value } = e.target;
     const updatedItems = order.items.map((orderItem) =>
       orderItem.name === item.name
-        ? { ...orderItem, temperature: value, option: order.espressoOptions[item.name] }
+        ? {
+            ...orderItem,
+            temperature: value,
+            option: order.espressoOptions[item.name],
+          }
         : orderItem
     );
-
+   
     const existingItemIndex = updatedItems.findIndex(
       (orderItem) => orderItem.name === item.name
     );
-
+   
     if (existingItemIndex === -1) {
       updatedItems.push({
         ...item,
@@ -327,14 +349,18 @@ const Menu = () => {
         option: order.espressoOptions[item.name], // Ensure to keep the option field for Espresso
       });
     }
-
+   
     setOrder({
       ...order,
       items: updatedItems,
       temperature: { ...order.temperature, [item.name]: value },
     });
-
-    if (item.name !== "Water" && item.name !== "Ice Cubes" && value.trim() !== "") {
+   
+    if (
+      item.name !== "Water" &&
+      item.name !== "Ice Cubes" &&
+      value.trim() !== ""
+    ) {
       const menuItemCard = document.querySelector(
         `.cards[data-item-name="${item.name}"]`
       );
@@ -343,19 +369,24 @@ const Menu = () => {
       }
     }
   };
-
+   
   const handleEspressoOptionChange = (e, item) => {
     const { value } = e.target;
     const updatedItems = order.items.map((orderItem) =>
       orderItem.name === item.name
-        ? { ...orderItem, option: value, temperature: orderItem.temperature, options: order.options[item.name] || {} }
+        ? {
+            ...orderItem,
+            option: value,
+            temperature: orderItem.temperature,
+            options: order.options[item.name] || {},
+          }
         : orderItem
     );
-
+   
     const existingItemIndex = updatedItems.findIndex(
       (orderItem) => orderItem.name === item.name
     );
-
+   
     if (existingItemIndex === -1) {
       updatedItems.push({
         ...item,
@@ -364,28 +395,31 @@ const Menu = () => {
         options: order.options[item.name] || {},
       });
     }
-
+   
     setOrder({
       ...order,
       items: updatedItems,
       espressoOptions: { ...order.espressoOptions, [item.name]: value },
     });
-
-    const radioButtons = document.querySelectorAll(`input[name="${item.name}-option"]`);
-    radioButtons.forEach(radio => radio.classList.remove('error'));
+   
+    const radioButtons = document.querySelectorAll(
+      `input[name="${item.name}-option"]`
+    );
+    radioButtons.forEach((radio) => radio.classList.remove("error"));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     let hasError = false;
-
     const nameInput = document.querySelector(".name2");
     const departmentSelect = document.querySelector(".dep2");
-
+  
+    // Reset previous error states
     if (nameInput) nameInput.classList.remove("error");
     if (departmentSelect) departmentSelect.classList.remove("error");
-
+  
+    // Validate name
     if (order.name.trim() === "") {
       if (nameInput) {
         nameInput.scrollIntoView({ behavior: "smooth" });
@@ -394,7 +428,8 @@ const Menu = () => {
         hasError = true;
       }
     }
-
+  
+    // Validate department
     if (order.department.trim() === "") {
       if (departmentSelect) {
         departmentSelect.scrollIntoView({ behavior: "smooth" });
@@ -403,7 +438,7 @@ const Menu = () => {
         hasError = true;
       }
     }
-
+  
     // Check if temperature is selected for each item, excluding "Water" and "Ice Cubes"
     order.items.forEach((item) => {
       if (item.name !== "Water" && item.name !== "Ice Cubes") {
@@ -421,7 +456,7 @@ const Menu = () => {
           }
         }
       }
-
+  
       if (item.name === "Espresso") {
         const espressoOptionInput = document.querySelector(
           `input[name="${item.name}-option"]:checked`
@@ -431,7 +466,7 @@ const Menu = () => {
             `input[name="${item.name}-option"]`
           );
           radioButtons.forEach((radio) => radio.classList.add("error"));
-
+  
           const menuItemCard = document.querySelector(
             `.cards[data-item-name="${item.name}"]`
           );
@@ -441,8 +476,11 @@ const Menu = () => {
           }
         }
       }
-
-      if (order.options[item.name]?.sugar && !Object.values(sugarQuantities[item.name] || {}).some((qty) => qty > 0)) {
+  
+      if (
+        order.options[item.name]?.sugar &&
+        !Object.values(sugarQuantities[item.name] || {}).some((qty) => qty > 0)
+      ) {
         const sugarTypeElement = document.querySelector(
           `.cards[data-item-name="${item.name}"] .sugar-types`
         );
@@ -453,7 +491,28 @@ const Menu = () => {
         }
       }
     });
-
+  
+    // Check if at least one item has a quantity greater than 0
+    const itemsWithZeroQuantity = order.items.filter(
+      (item) =>
+        quantities[item.name] === 0 &&
+        (order.options[item.name] || order.temperature[item.name] || order.espressoOptions[item.name])
+    );
+  
+    if (itemsWithZeroQuantity.length > 0) {
+      itemsWithZeroQuantity.forEach((item) => {
+        const quantityControl = document.querySelector(
+          `.cards[data-item-name="${item.name}"] .quantity-controls`
+        );
+        if (quantityControl) {
+          quantityControl.classList.add("error-outline");
+          quantityControl.scrollIntoView({ behavior: "smooth" });
+          hasError = true;
+        }
+      });
+      alert("Please increase the cup quantity for all selected items.");
+    }
+  
     if (!hasError) {
       const itemsWithQuantities = order.items.map((item) => ({
         ...item,
@@ -465,7 +524,8 @@ const Menu = () => {
       setShowConfirmation(true);
     }
   };
-
+  
+  
   const formatSugarQuantities = (sugarQuantities) => {
     const formattedSugarQuantities = {};
     if (sugarQuantities && sugarQuantities.white) {
@@ -481,21 +541,23 @@ const Menu = () => {
   };
 
   const confirmOrder = () => {
+    console.log('departmentSelectRef:', departmentSelectRef.current);
+  
     const newOrder = {
       ...order,
       items: order.items.map((item) => ({
         ...item,
         temperature: order.temperature[item.name],
         quantity: quantities[item.name],
-        options: order.options[item.name],
+        options: order.options[item.name] || {},
         sugarQuantities: sugarQuantities[item.name] || {},
-        option: order.espressoOptions[item.name], // Ensure to keep the option field for Espresso
+        option: order.espressoOptions[item.name] || "", // Ensure to keep the option field for Espresso
       })),
     };
-
+  
     socket.emit("newOrder", newOrder);
     setShowConfirmation(false);
-
+  
     // Reset order state
     setOrder({
       name: "",
@@ -505,24 +567,32 @@ const Menu = () => {
       options: {},
       espressoOptions: {},
     });
-
+  
     // Reset quantities and sugarQuantities states
     setQuantities(
       menuItems.reduce((acc, item) => ({ ...acc, [item.name]: 1 }), {})
     );
     setSugarQuantities({});
-
+  
     // Reset filteredMenuItems to show all items
     setFilteredMenuItems(menuItems);
-
+  
     // Reset form fields
     document.getElementById("orderForm").reset();
-
-    // Manually reset department select
-    setOrder((prevOrder) => ({ ...prevOrder, department: "" }));
-
+  
+    // Manually reset department select, only if ref exists
+    if (departmentSelectRef.current) {
+      setOrder((prevOrder) => ({
+        ...prevOrder,
+        department: "",
+      }));
+    }
+    
+  
     alert("Thanks for ordering! Your coffee will be delivered to you soon.");
   };
+  
+  
 
   const cancelOrder = () => {
     setShowConfirmation(false);
@@ -550,7 +620,7 @@ const Menu = () => {
     "Green Tea": "/green-tea.jpeg",
     Latte: "/latte.jpeg",
     Macchiato: "/meccato.jpeg",
-    "Red Tea": "/red-tea.jpeg",
+    "Red Tea": "/red-tea-.jpeg",
     "Arabic Coffee": "/saudiicoffee.jpeg",
     "Special Coffee": "/blackcoffee.jpeg",
     Ristretto: "/espresso.jpeg",
@@ -609,12 +679,13 @@ const Menu = () => {
               </div>
 
               <div className="hero-overlay">
-                <form className="form-s mt-3">
-                  <div className="row mb-3">
-                    <div className=" col text-center">
+
+              <form className="form-s mt-3">
+                  <div className="row mb-3 ">
+                    <div className="col">
                       <input
                         type="text"
-                        className="name1 name2 form-control custom-font"
+                        className="form-control custom-font name2"
                         placeholder="Name"
                         name="name"
                         value={order.name}
@@ -623,22 +694,28 @@ const Menu = () => {
                         style={{ color: "gray" }}
                       />
                     </div>
-                    <div className="dep1 col">
+                    <div className="col">
+                      <div className="form-control custom-font p-0 dep2">
                       <Select
-                        className="dep2 form-control custom-font"
-                        name="department"
-                        options={departmentOptions}
-                        menuPlacement="top"
-                        value={departmentOptions.find(
-                          (option) => option.value === order.department
-                        )}
-                        onChange={handleDepartmentChange}
-                        placeholder="Department"
-                        required
-                      />
+  ref={departmentSelectRef}
+  classNamePrefix="dep2"
+  name="department"
+  options={departmentOptions}
+  menuPlacement="top"
+  value={departmentOptions.find(
+    (option) => option.value === order.department
+  )}
+  onChange={handleDepartmentChange}
+  placeholder="Department"
+  required
+/>
+
+
+                      </div>
                     </div>
                   </div>
                 </form>
+
                 <button
                   className="order-now-button custom-font"
                   onClick={scrollToMenuSection}
@@ -952,14 +1029,25 @@ const Menu = () => {
           </div>
 
           <form id="orderForm" onSubmit={handleSubmit} className="container">
-            <button
-              type="submit"
-              className="btn-submit btn-2 btn-block mt-4"
-              ref={SubmitOrderSectionRef}
-            >
-              Submit Order
-            </button>
-          </form>
+              <div className="row justify-content-center">
+                <div className="col-12 col-md-6 col-lg-4">
+                  <button
+                    type="submit"
+                    className="btn btn-primary btn-block mt-4 order-now-button"
+                    ref={SubmitOrderSectionRef}
+                    style={{
+                      backgroundColor: "rgba(82, 133, 154)",
+                      color: "white",
+                      border: "none",
+                      width: "100%",
+                      marginBottom: "0",
+                    }}
+                  >
+                    Submit Order
+                  </button>
+                </div>
+              </div>
+            </form>
 
           <div className="scroll-buttons" ref={scrollButtonsRef}>
             <button
@@ -1093,4 +1181,3 @@ const Menu = () => {
 };
 
 export default Menu;
-

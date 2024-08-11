@@ -184,7 +184,7 @@ const Admin = () => {
             }}
             onClick={handleAddItem}
           >
-            Save
+            Submit
           </button>
         </div>
 

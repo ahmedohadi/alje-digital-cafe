@@ -14,11 +14,11 @@ const Order = () => {
 
   useEffect(() => {
     socket.on("initialOrders", (initialOrders) => {
-      setOrders(initialOrders);
+      setOrders(sortOrders(initialOrders));
     });
 
     socket.on("orderReceived", (order) => {
-      setOrders((prevOrders) => [order, ...prevOrders]); // Add new order at the beginning
+      setOrders((prevOrders) => sortOrders([order, ...prevOrders])); // Add new order at the beginning
       if (userInteracted) {
         console.log("Playing notification sound...");
         notificationSound.current.play().catch((error) => {
@@ -32,7 +32,7 @@ const Order = () => {
 
     socket.on("orderConfirmed", (orderId) => {
       setOrders((prevOrders) =>
-        prevOrders.filter((order) => order.id !== orderId)
+        sortOrders(prevOrders.filter((order) => order.id !== orderId))
       );
     });
 
@@ -43,6 +43,13 @@ const Order = () => {
     };
   }, [userInteracted]);
 
+  const sortOrders = (orders) => {
+    return orders.sort((a, b) => {
+      const priority = { "Chairman Office": 1, "CEO Office": 2 };
+      return (priority[a.department] || 3) - (priority[b.department] || 3);
+    });
+  };
+
   const handleUserInteraction = () => {
     console.log("User interacted with the document.");
     setUserInteracted(true);
@@ -51,7 +58,7 @@ const Order = () => {
   const handleConfirmReceipt = (index) => {
     const orderId = orders[index].id;
     const updatedOrders = orders.filter((_, i) => i !== index);
-    setOrders(updatedOrders);
+    setOrders(sortOrders(updatedOrders));
     socket.emit("confirmReceipt", orderId);
 
     const confirmationMessage = `Order confirmed! ${orders[index].name} - ${orders[index].department}`;
@@ -82,16 +89,19 @@ const Order = () => {
     }, {});
 
     return Object.values(itemMap).map((item) => {
-      const options = Object.keys(item.options)
-        .filter((option) => item.options[option])
-        .join(", ") || "None";
+      const options =
+        Object.keys(item.options)
+          .filter((option) => item.options[option])
+          .join(", ") || "None";
       return {
         ...item,
         options,
         temperature: Array.from(item.temperature).join(", "),
         sugarQuantities: Object.keys(item.sugarQuantities || {})
           .filter((sugarType) => item.sugarQuantities[sugarType] > 0)
-          .map((sugarType) => `${sugarType}: ${item.sugarQuantities[sugarType]}`)
+          .map(
+            (sugarType) => `${sugarType}: ${item.sugarQuantities[sugarType]}`
+          )
           .join(", "),
       };
     });
@@ -145,7 +155,7 @@ const Order = () => {
 
   return (
     <div
-      className="container mt-5"
+      className="container mt-5 custom-font"
       style={contentStyle}
       onClick={handleUserInteraction}
       onKeyDown={handleUserInteraction}
@@ -173,46 +183,51 @@ const Order = () => {
               key={index}
               className="card my-2"
               style={{
-                width: "500px",
-                position: "relative",
-                border: `2px solid ${borderColor}`, // Set border color based on department
+                width: "350px",
+                margin: "10px",
+                border: `2px solid ${borderColor}`,
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                borderRadius: "10px",
               }}
             >
-              <div className="card-body d-flex flex-column align-items-center">
+              <div
+                className="card-body d-flex flex-column align-items-center custom-font"
+                style={{ width: "100%", padding: "2px", textAlign: "center" }}
+              >
                 <h5 className="card-title">
                   {order.name} - {order.department}
                 </h5>
-                <ul className="list-group">
+                <ul
+                  className="list-group custom-font"
+                  style={{ textAlign: "left", width: "100%" }}
+                >
                   {formatOrderItems(order.items).map((item, idx) => (
-                    <li key={idx} className="list-group-item">
+                    <li key={idx} className="list-group-item custom-font">
                       <div className="d-flex justify-content-between">
                         <span>
-                          {item.name}
-                          {item.name === "Espresso" && item.option
-                            ? ` (${item.option})`
-                            : ""}{" "}
-                          ({item.options})
+                          {item.name} ({item.options})
                         </span>
                         <span>
                           x{item.quantity} -{" "}
                           {item.temperature || "No temperature specified"}
                         </span>
                       </div>
-                      {item.sugarQuantities ? (
+                      {item.sugarQuantities && (
                         <>
-                          Sugar Quantities:{" "}
+                          <div>Sugar:</div>
                           <ul>
                             {item.sugarQuantities
                               .split(", ")
                               .map((sugarTypeQuantity) => (
-                                <li key={sugarTypeQuantity}>
+                                <li
+                                  key={sugarTypeQuantity}
+                                  className="custom-font"
+                                >
                                   {sugarTypeQuantity}
                                 </li>
                               ))}
                           </ul>
                         </>
-                      ) : (
-                        <span>Sugar Quantities: None</span>
                       )}
                     </li>
                   ))}

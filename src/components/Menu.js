@@ -674,7 +674,7 @@ const Menu = () => {
           <h1 className="custom-font header-title">ALJE Digital Café</h1>
         </div>
         <div>
-          <img src="/logo3.png" alt="Logo" className="logo-image img-fluid" style={{height:45}} />
+          <img src="/logo3.png" alt="Logo" className="logo-image img-fluid h-45"  />
         </div>
       </header>
 

@@ -367,18 +367,18 @@ font-size: 15px;
   flex: 1;
 } */
 
-.cta{
-  width:100%;
+.cta {
+  width: 100%;
   background-image: url(../../public/jameel75background.jpeg);
-  background-repeat: no-repeat;
+  /* background-repeat: no-repeat; */
+  background-repeat: cover;
   background-position: center;
   background-size: 1100px;
   text-align: center;
-  padding: 30px ;
+  padding: 30px;
   margin-bottom: 90px;
   box-shadow: 0 10px 20px #75869424;
-  height:500px;
-
+  height: 500px;
 }
 
  .cta img {

@@ -703,7 +703,7 @@ const Menu = () => {
                     Your <span>Coffee</span> comes to your office
                   </h1>
                 </div>
-
+ 
                 <div className="cta-image flex-1 flex">
                   <img
                     src="/cofeeesp.png"
@@ -712,11 +712,12 @@ const Menu = () => {
                   />
                 </div>
               </div>
-
+ 
               <div className="hero-overlay">
-                <form className="form-s mt-3">
-                  <div className="row mb-3 ">
-                    <div className="col">
+                <div className="container "  style={{ marginTop: '14rem' }}>
+                  {" "}
+                  <div className="row justify-content-center">
+                    <div className="col-8 col-md-4 mb-3">
                       <input
                         type="text"
                         className="form-control custom-font name2"
@@ -725,12 +726,12 @@ const Menu = () => {
                         value={order.name}
                         onChange={handleChange}
                         required
-                        style={{ color: "gray" }}
+                       
                       />
                     </div>
-                    <div className="col">
+                    <div className="col-8 col-md-4 mb-3">
                       <div className="form-control custom-font p-0 dep2">
-                        <Select
+                      <Select
                           ref={departmentSelectRef}
                           classNamePrefix="dep2"
                           name="department"
@@ -746,14 +747,16 @@ const Menu = () => {
                       </div>
                     </div>
                   </div>
-                </form>
-
-                <button
-                  className="order-now-button custom-font"
-                  onClick={scrollToMenuSection}
-                >
-                  Order Now <i className="bi bi-arrow-down"></i>
-                </button>
+                </div>
+ 
+                <div className="text-center">
+                  <button
+                    className="order-now-button custom-font mt-3"
+                    onClick={scrollToMenuSection}
+                  >
+                    Order Now <i className="bi bi-arrow-down"></i>
+                  </button>
+                </div>
               </div>
             </section>
           </div>

@@ -329,52 +329,60 @@ const Menu = () => {
   const handleRadioChange = (e, item) => {
     const { value } = e.target;
     const updatedItems = order.items.map((orderItem) =>
-      orderItem.name === item.name
-        ? {
-            ...orderItem,
-            temperature: value,
-            option: order.espressoOptions[item.name],
-          }
-        : orderItem
+        orderItem.name === item.name
+            ? {
+                  ...orderItem,
+                  temperature: value,
+                  option: order.espressoOptions[item.name],
+              }
+            : orderItem
     );
 
     if (item.name === "Water") {
-      setWaterValidation(false);
+        setWaterValidation(false);
+        
+        // Remove red outline when a temperature is selected
+        const waterRadioButtons = document.querySelectorAll(
+            `input[name="Water-temperature"]`
+        );
+        waterRadioButtons.forEach((radio) => {
+            radio.classList.remove("error");
+        });
     }
 
-
     const existingItemIndex = updatedItems.findIndex(
-      (orderItem) => orderItem.name === item.name
+        (orderItem) => orderItem.name === item.name
     );
 
     if (existingItemIndex === -1) {
-      updatedItems.push({
-        ...item,
-        temperature: value,
-        options: order.options[item.name] || {},
-        option: order.espressoOptions[item.name],
-      });
+        updatedItems.push({
+            ...item,
+            temperature: value,
+            options: order.options[item.name] || {},
+            option: order.espressoOptions[item.name],
+        });
     }
 
     setOrder({
-      ...order,
-      items: updatedItems,
-      temperature: { ...order.temperature, [item.name]: value },
+        ...order,
+        items: updatedItems,
+        temperature: { ...order.temperature, [item.name]: value },
     });
 
     if (
-      item.name !== "Water" &&
-      item.name !== "Ice Cubes" &&
-      value.trim() !== ""
+        item.name !== "Water" &&
+        item.name !== "Ice Cubes" &&
+        value.trim() !== ""
     ) {
-      const menuItemCard = document.querySelector(
-        `.cards[data-item-name="${item.name}"]`
-      );
-      if (menuItemCard) {
-        menuItemCard.classList.remove("error");
-      }
+        const menuItemCard = document.querySelector(
+            `.cards[data-item-name="${item.name}"]`
+        );
+        if (menuItemCard) {
+            menuItemCard.classList.remove("error");
+        }
     }
-  };
+};
+
 
   const handleEspressoOptionChange = (e, item) => {
     const { value } = e.target;
@@ -425,115 +433,139 @@ const Menu = () => {
     if (departmentSelect) departmentSelect.classList.remove("error");
 
     if (order.name.trim() === "") {
-      if (nameInput) {
-        nameInput.scrollIntoView({ behavior: "smooth" });
-        nameInput.focus();
-        nameInput.classList.add("error");
-        hasError = true;
-      }
+        if (nameInput) {
+            nameInput.scrollIntoView({ behavior: "smooth" });
+            nameInput.focus();
+            nameInput.classList.add("error");
+            hasError = true;
+        }
     }
 
     if (order.department.trim() === "") {
-      if (departmentSelect) {
-        departmentSelect.scrollIntoView({ behavior: "smooth" });
-        departmentSelect.focus();
-        departmentSelect.classList.add("error");
-        hasError = true;
-      }
+        if (departmentSelect) {
+            departmentSelect.scrollIntoView({ behavior: "smooth" });
+            departmentSelect.focus();
+            departmentSelect.classList.add("error");
+            hasError = true;
+        }
     }
 
     order.items.forEach((item) => {
-      if (item.name !== "Water" && item.name !== "Ice Cubes") {
-        const temperatureInput = document.querySelector(
-          `input[name="${item.name}-temperature"]:checked`
-        );
-        if (!temperatureInput) {
-          const menuItemCard = document.querySelector(
-            `.cards[data-item-name="${item.name}"]`
-          );
-          if (menuItemCard) {
-            menuItemCard.scrollIntoView({ behavior: "smooth" });
-            menuItemCard.classList.add("error");
-            hasError = true;
-          }
+        if (item.name !== "Water" && item.name !== "Ice Cubes") {
+            const temperatureInput = document.querySelector(
+                `input[name="${item.name}-temperature"]:checked`
+            );
+            if (!temperatureInput) {
+                const menuItemCard = document.querySelector(
+                    `.cards[data-item-name="${item.name}"]`
+                );
+                if (menuItemCard) {
+                    menuItemCard.scrollIntoView({ behavior: "smooth" });
+                    menuItemCard.classList.add("error");
+                    hasError = true;
+                }
+            }
         }
-      }
 
-      if (item.name === "Espresso") {
-        const espressoOptionInput = document.querySelector(
-          `input[name="${item.name}-option"]:checked`
-        );
-        if (!espressoOptionInput) {
-          const radioButtons = document.querySelectorAll(
-            `input[name="${item.name}-option"]`
-          );
-          radioButtons.forEach((radio) => radio.classList.add("error"));
+        if (item.name === "Espresso") {
+            const espressoOptionInput = document.querySelector(
+                `input[name="${item.name}-option"]:checked`
+            );
+            if (!espressoOptionInput) {
+                const radioButtons = document.querySelectorAll(
+                    `input[name="${item.name}-option"]`
+                );
+                radioButtons.forEach((radio) => radio.classList.add("error"));
 
-          const menuItemCard = document.querySelector(
-            `.cards[data-item-name="${item.name}"]`
-          );
-          if (menuItemCard) {
-            menuItemCard.scrollIntoView({ behavior: "smooth" });
-            hasError = true;
-          }
+                const menuItemCard = document.querySelector(
+                    `.cards[data-item-name="${item.name}"]`
+                );
+                if (menuItemCard) {
+                    menuItemCard.scrollIntoView({ behavior: "smooth" });
+                    hasError = true;
+                }
+            }
         }
-      }
 
-      if (
-        order.options[item.name]?.sugar &&
-        !Object.values(sugarQuantities[item.name] || {}).some((qty) => qty > 0)
-      ) {
-        const sugarTypeElement = document.querySelector(
-          `.cards[data-item-name="${item.name}"] .sugar-types`
-        );
-        if (sugarTypeElement) {
-          sugarTypeElement.classList.add("error-outline");
-          sugarTypeElement.scrollIntoView({ behavior: "smooth" });
-          hasError = true;
+        if (
+            order.options[item.name]?.sugar &&
+            !Object.values(sugarQuantities[item.name] || {}).some((qty) => qty > 0)
+        ) {
+            const sugarTypeElement = document.querySelector(
+                `.cards[data-item-name="${item.name}"] .sugar-types`
+            );
+            if (sugarTypeElement) {
+                sugarTypeElement.classList.add("error-outline");
+                sugarTypeElement.scrollIntoView({ behavior: "smooth" });
+                hasError = true;
+            }
         }
-      }
     });
 
     const itemsWithZeroQuantity = order.items.filter(
-      (item) =>
-        quantities[item.name] === 0 &&
-        (order.options[item.name] ||
-          order.temperature[item.name] ||
-          order.espressoOptions[item.name])
+        (item) =>
+            quantities[item.name] === 0 &&
+            (order.options[item.name] ||
+                order.temperature[item.name] ||
+                order.espressoOptions[item.name])
     );
 
     if (itemsWithZeroQuantity.length > 0) {
-      itemsWithZeroQuantity.forEach((item) => {
-        const quantityControl = document.querySelector(
-          `.cards[data-item-name="${item.name}"] .quantity-controls`
+        itemsWithZeroQuantity.forEach((item) => {
+            const quantityControl = document.querySelector(
+                `.cards[data-item-name="${item.name}"] .quantity-controls`
+            );
+            if (quantityControl) {
+                quantityControl.classList.add("error-outline");
+                quantityControl.scrollIntoView({ behavior: "smooth" });
+                hasError = true;
+            }
+        });
+        alert("Please increase the cup quantity for all selected items.");
+    }
+
+    // Check for Water temperature validation
+    if (quantities["Water"] > 0 && !order.temperature["Water"]) {
+        const waterRadioButtons = document.querySelectorAll(
+            `input[name="Water-temperature"]`
         );
-        if (quantityControl) {
-          quantityControl.classList.add("error-outline");
-          quantityControl.scrollIntoView({ behavior: "smooth" });
-          hasError = true;
+        waterRadioButtons.forEach((radio) => {
+            radio.classList.add("error");
+        });
+
+        const waterCard = document.querySelector(`.cards[data-item-name="Water"]`);
+        if (waterCard) {
+            waterCard.scrollIntoView({ behavior: "smooth" });
+            hasError = true;
         }
-      });
-      alert("Please increase the cup quantity for all selected items.");
+    } else {
+        const waterRadioButtons = document.querySelectorAll(
+            `input[name="Water-temperature"]`
+        );
+        waterRadioButtons.forEach((radio) => {
+            radio.classList.remove("error");
+        });
     }
 
     if (order.items.length === 0) {
-      setShowValidationMessage(true);
-      hasError = true;
+        setShowValidationMessage(true);
+        hasError = true;
     } else {
-      setShowValidationMessage(false);
+        setShowValidationMessage(false);
     }
 
     if (!hasError) {
-      const itemsWithQuantities = order.items.map((item) => ({
-        ...item,
-        quantity: quantities[item.name],
-        sugarQuantities: formatSugarQuantities(sugarQuantities[item.name]),
-        option: order.espressoOptions[item.name],
-      }));
-      setOrder({ ...order, items: itemsWithQuantities });
-      setShowConfirmation(true);
+        const itemsWithQuantities = order.items.map((item) => ({
+            ...item,
+            quantity: quantities[item.name],
+            sugarQuantities: formatSugarQuantities(sugarQuantities[item.name]),
+            option: order.espressoOptions[item.name],
+        }));
+        setOrder({ ...order, items: itemsWithQuantities });
+        setShowConfirmation(true);
     }
-  };
+};
+
 
   const formatSugarQuantities = (sugarQuantities) => {
     const formattedSugarQuantities = {};
@@ -551,7 +583,7 @@ const Menu = () => {
 
   const confirmOrder = () => {
     console.log("departmentSelectRef:", departmentSelectRef.current);
-
+  
     const newOrder = {
       ...order,
       items: order.items.map((item) => ({
@@ -563,10 +595,10 @@ const Menu = () => {
         option: order.espressoOptions[item.name] || "",
       })),
     };
-
+  
     socket.emit("newOrder", newOrder);
     setShowConfirmation(false);
-
+  
     setOrder({
       name: "",
       department: "",
@@ -575,25 +607,27 @@ const Menu = () => {
       options: {},
       espressoOptions: {},
     });
-
+  
+    // Reset cup quantities to 0 after submitting the order
     setQuantities(
-      menuItems.reduce((acc, item) => ({ ...acc, [item.name]: 1 }), {})
+      menuItems.reduce((acc, item) => ({ ...acc, [item.name]: 0 }), {})
     );
     setSugarQuantities({});
-
+  
     setFilteredMenuItems(menuItems);
-
+  
     document.getElementById("orderForm").reset();
-
+  
     if (departmentSelectRef.current) {
       setOrder((prevOrder) => ({
         ...prevOrder,
         department: "",
       }));
     }
-
+  
     alert("Thanks for ordering! Your coffee will be delivered to you soon.");
   };
+  
 
   const cancelOrder = () => {
     setShowConfirmation(false);
@@ -640,7 +674,7 @@ const Menu = () => {
           <h1 className="custom-font header-title">ALJE Digital Café</h1>
         </div>
         <div>
-          <img src="/logo3.png" alt="Logo" className="logo-image" />
+          <img src="/logo3.png" alt="Logo" className="logo-image img-fluid" style={{height:45}} />
         </div>
       </header>
 
@@ -876,88 +910,68 @@ const Menu = () => {
                       </>
                     )}
 
-                    {predefinedItems.includes(item.name) &&
-                      item.name !== "Espresso" &&
-                      item.name !== "Ice Cubes" &&
-                      item.name !== "Water" && (
-                        <div key="sugar" className="form-check">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id={`${item.name}-sugar`}
-                            name="sugar"
-                            onChange={(e) => handleCheckboxChange(e, item)}
-                            checked={order.options[item.name]?.sugar || false}
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor={`${item.name}-sugar`}
-                          >
-                            Sugar
-                          </label>
-                          {sugarQuantities[item.name] &&
-                            (sugarQuantities[item.name].white > 0 ||
-                              sugarQuantities[item.name].brown > 0 ||
-                              sugarQuantities[item.name].diet > 0) && (
-                              <i className="bi bi-check-circle-fill text-success ms-2"></i>
-                            )}
-
-                          {order.options[item.name]?.sugar && (
-                            <div className="sugar-types mt-2">
-                              {["white", "brown", "diet"].map((sugarType) => (
-                                <div
-                                  className="row align-items-center mb-2"
-                                  key={sugarType}
-                                >
-                                  <div className="col-3">
-                                    <label
-                                      className="form-check-label"
-                                      htmlFor={`${item.name}-${sugarType}-sugar`}
-                                    >
-                                      {sugarType.charAt(0).toUpperCase() +
-                                        sugarType.slice(1)}
-                                    </label>
-                                  </div>
-                                  <div className="col-9 d-flex align-items-center">
-                                    <button
-                                      type="button"
-                                      className="btn btn-outline-secondary btn-sm"
-                                      onClick={() =>
-                                        handleSugarQuantityChange(
-                                          item.name,
-                                          sugarType,
-                                          -1
-                                        )
-                                      }
-                                    >
-                                      -
-                                    </button>
-                                    <span className="mx-2">
-                                      {sugarQuantities[item.name]?.[
-                                        sugarType
-                                      ] || 0}
-                                    </span>
-                                    <button
-                                      type="button"
-                                      className="btn btn-outline-danger btn-sm"
-                                      onClick={() =>
-                                        handleSugarQuantityChange(
-                                          item.name,
-                                          sugarType,
-                                          1
-                                        )
-                                      }
-                                    >
-                                      +
-                                    </button>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      )}
-
+{predefinedItems.includes(item.name) &&
+item.name !== "Espresso" && item.name !== "Ice Cubes" && item.name !== "Water" && (
+  <div key="sugar-container" className="mb-3">
+    <div className="form-check">
+      <input
+        className="form-check-input"
+        type="checkbox"
+        id={`${item.name}-sugar`}
+        name="sugar"
+        onChange={(e) => handleCheckboxChange(e, item)}
+        checked={order.options[item.name]?.sugar || false}
+      />
+      <label className="form-check-label" htmlFor={`${item.name}-sugar`}>
+        Sugar
+      </label>
+      {sugarQuantities[item.name] &&
+        (sugarQuantities[item.name].white > 0 ||
+          sugarQuantities[item.name].brown > 0 ||
+          sugarQuantities[item.name].diet > 0) && (
+          <i className="bi bi-check-circle-fill text-success ms-2"></i>
+        )}
+    </div>
+ 
+    {order.options[item.name]?.sugar && (
+      <div className="mt-2">
+        <div className="d-flex flex-column">
+          {["white", "brown", "diet"].map((sugarType) => (
+            <div key={sugarType} className="form-check d-flex align-items-center mb-2">
+              <label
+                className="form-check-label"
+                htmlFor={`${item.name}-${sugarType}-sugar`}
+                style={{ marginRight: "8px" }}
+              >
+                {sugarType.charAt(0).toUpperCase() + sugarType.slice(1)}
+              </label>
+              <div className="d-flex align-items-center">
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary btn-sm"
+                  onClick={() => handleSugarQuantityChange(item.name, sugarType, -1)}
+                  style={{ marginRight: "4px" }}
+                >
+                  -
+                </button>
+                <span className="mx-1">
+                  {sugarQuantities[item.name]?.[sugarType] || 0}
+                </span>
+                <button
+                  type="button"
+                  className="btn btn-outline-danger btn-sm"
+                  onClick={() => handleSugarQuantityChange(item.name, sugarType, 1)}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+)}
                     {itemsWithMilkOption.includes(item.name) && (
                       <div key="milk" className="form-check">
                         <input

@@ -446,6 +446,16 @@ font-size: 15px;
     margin-left: auto;
     margin-right: auto;
   }
+
+  /* .cta{
+background-size: 600px;
+  }
+
+  .text-div{
+     background-color: aqua; 
+
+  } */
+
 }
 
 
@@ -587,10 +597,10 @@ font-size: 15px;
   font-size: 2rem;
 }
 
-.logo-image {
-  height: 50px; /* Adjust height as needed */
+/* .logo-image {
+  height: 50px; 
   size: 100px;
-}
+} */
 
 
 /* Confirmation Modal section */
@@ -685,9 +695,9 @@ position: relative;
     font-size: 20px;
   }
   
-  .logo-image {
-    max-width: 200px; /* Adjust as necessary */
-  }
+  /* .logo-image {
+    max-width: 300px; 
+  }  */
 
   /* .btn-block {
     margin-left: auto;
@@ -898,4 +908,8 @@ position: relative;
 
 .error-outline {
   border: 2px solid red !important;
+}
+
+.error {
+  outline: 2px solid red;
 }

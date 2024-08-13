@@ -674,7 +674,7 @@ const Menu = () => {
           <h1 className="custom-font header-title">ALJE Digital Café</h1>
         </div>
         <div>
-          <img src="/logo3.png" alt="Logo" className="logo-image img-fluid h-45"  />
+          <img src="/logo3.png" alt="Logo" className="logo-image img-fluid h-45" style={{height:45}} />
         </div>
       </header>
 
@@ -935,22 +935,24 @@ item.name !== "Espresso" && item.name !== "Ice Cubes" && item.name !== "Water" &
  
     {order.options[item.name]?.sugar && (
       <div className="mt-2">
-        <div className="d-flex flex-column">
+        <div className="container" >
           {["white", "brown", "diet"].map((sugarType) => (
-            <div key={sugarType} className="form-check d-flex align-items-center mb-2">
+            <div key={sugarType} className="row mb-2 align-items-center">
               <label
                 className="form-check-label"
                 htmlFor={`${item.name}-${sugarType}-sugar`}
                 style={{ marginRight: "8px" }}
+                
               >
                 {sugarType.charAt(0).toUpperCase() + sugarType.slice(1)}
               </label>
-              <div className="d-flex align-items-center">
+              <div className="col-9 d-flex align-items-center justify-content-center" >
                 <button
                   type="button"
                   className="btn btn-outline-secondary btn-sm"
                   onClick={() => handleSugarQuantityChange(item.name, sugarType, -1)}
                   style={{ marginRight: "4px" }}
+
                 >
                   -
                 </button>

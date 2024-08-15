@@ -370,8 +370,8 @@ font-size: 15px;
 .cta {
   width: 100%;
   background-image: url(../../public/jameel75background.jpeg);
-  /* background-repeat: no-repeat; */
-  background-repeat: cover;
+  background-repeat: no-repeat;
+  background-size: cover;
   background-position: center;
   background-size: 1100px;
   text-align: center;

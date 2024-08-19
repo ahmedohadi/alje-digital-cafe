@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.css": "/alje-digital-cafe/static/css/main.0bcc3b55.css",
+    "main.js": "/alje-digital-cafe/static/js/main.41a6ae69.js",
+    "static/js/453.5ea454da.chunk.js": "/alje-digital-cafe/static/js/453.5ea454da.chunk.js",
+    "static/media/bootstrap-icons.woff?": "/alje-digital-cafe/static/media/bootstrap-icons.39795c0b4513de014cf8.woff",
+    "static/media/bootstrap-icons.woff2?": "/alje-digital-cafe/static/media/bootstrap-icons.b7bcc075b395c14ce8c2.woff2",
+    "static/media/Karbon-Regular.ttf": "/alje-digital-cafe/static/media/Karbon-Regular.cf4f9a42e338e9ba647a.ttf",
+    "static/media/jameel75background.jpeg": "/alje-digital-cafe/static/media/jameel75background.d19b7b2a8b00df902b48.jpeg",
+    "index.html": "/alje-digital-cafe/index.html",
+    "main.0bcc3b55.css.map": "/alje-digital-cafe/static/css/main.0bcc3b55.css.map",
+    "main.41a6ae69.js.map": "/alje-digital-cafe/static/js/main.41a6ae69.js.map",
+    "453.5ea454da.chunk.js.map": "/alje-digital-cafe/static/js/453.5ea454da.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0bcc3b55.css",
+    "static/js/main.41a6ae69.js"
+  ]
+}

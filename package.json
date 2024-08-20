@@ -1,4 +1,5 @@
 {
+  "homepage": "https://ahmedohadi.github.io/alje-digital-cafe/",
   "name": "digital-cafe",
   "version": "0.1.0",
   "private": true,
@@ -25,7 +26,6 @@
     "socket.io-client": "^4.7.5",
     "web-vitals": "^2.1.4"
   },
-  "homepage": "https://ahmedohadi.github.io/alje-digital-cafe/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

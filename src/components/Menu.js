@@ -7,8 +7,8 @@ import { io } from "socket.io-client";
 import "../fonts.css";
 import "./Menu.css";
 
-const socket = io("http://localhost:4000");
-
+// const socket = io("http://localhost:4000");
+const socket = io("https://git.heroku.com/alje-digital-cafe.git");
 const Menu = () => {
   const [order, setOrder] = useState({
     name: "",

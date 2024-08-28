@@ -9,7 +9,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "https://git.heroku.com/alje-digital-cafe.git",
+    origin: "https://ahmedohadi.github.io/alje-digital-cafe/", // Change this to the URL of your GitHub Pages deployment
     methods: ["GET", "POST"],
     allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
     credentials: true,
@@ -17,12 +17,13 @@ const io = socketIo(server, {
 });
 app.use(
   cors({
-    origin: "https://git.heroku.com/alje-digital-cafe.git",
-    methods: ["GET", "POST"],
+    origin: "https://ahmedohadi.github.io/alje-digital-cafe/", // Change this to the URL of your GitHub Pages deployment
+    methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
     credentials: true,
   })
 );
+
 // Set up storage engine
 const storage = multer.diskStorage({
   destination: "./uploads/",
@@ -53,8 +54,6 @@ let menuItems = [
   { name: "Water", options: ["Ice", "Warm"] }, // Add water options
   { name: "Ice Cubes", options: [] }, // Add ice cube options
 ];
-
-
 
 io.on("connection", (socket) => {
   console.log("New client connected");
@@ -96,16 +95,6 @@ app.post("/upload", upload.single("image"), (req, res) => {
   res.send({ imageUrl: `/uploads/${req.file.filename}` });
 });
 
+// Set the port to the environment variable PORT or default to 4000
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-
-// const PORT = process.env.PORT || 4000;
-// server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-// const functions = require("firebase-functions");
-
-// exports.app = functions.https.onRequest(app);
-
-// Server is no longer needed since Firebase Functions handles it.
-// server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

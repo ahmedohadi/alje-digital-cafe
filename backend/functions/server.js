@@ -7,31 +7,19 @@ const multer = require("multer");
 const path = require("path");
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server, {
-<<<<<<< HEAD:backend/server.js
+const io = socketIo(server)
+// {
   // cors: {
   //   origin: "http://localhost:3000",
   //   methods: ["GET", "POST"],
   //   allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
   //   credentials: true,
   // },
-});
+// });
  
   app.use(
   cors({
     origin: ["https://ahmedohadi.github.io", "https://alje-digital-cafe-890211ee848f.herokuapp.com"],
-=======
-  cors: {
-    origin: "https://ahmedohadi.github.io/alje-digital-cafe/", // Change this to the URL of your GitHub Pages deployment
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
-    credentials: true,
-  },
-});
-app.use(
-  cors({
-    origin: "https://ahmedohadi.github.io/alje-digital-cafe/", // Change this to the URL of your GitHub Pages deployment
->>>>>>> 014f28f1c115cd1c88afe40044637528c35d95ff:backend/functions/server.js
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
     credentials: true,

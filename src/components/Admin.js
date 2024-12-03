@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { io } from "socket.io-client";
 import "../fonts.css";
 
-const socket = io("http://localhost:4000");
+const socket = io("https://git.heroku.com/alje-digital-cafe.git");
 
 const Admin = () => {
   const [menuItems, setMenuItems] = useState([]);

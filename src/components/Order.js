@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { io } from "socket.io-client";
 import "../fonts.css"; // Custom font
 
-const socket = io("http://localhost:4000"); // Adjust the URL to match your backend server
+const socket = io("https://git.heroku.com/alje-digital-cafe.git"); // Adjust the URL to match your backend server
 
 const Order = () => {
   const [orders, setOrders] = useState([]);

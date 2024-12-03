@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+//import { ToastContainer, toast } from "react-toastify";
+//import "react-toastify/dist/ReactToastify.css";
 import { io } from "socket.io-client";
+import ReactToastify from 'react-toastify';
 import "../fonts.css"; // Custom font
 
 const socket = io("https://git.heroku.com/alje-digital-cafe.git"); // Adjust the URL to match your backend server

@@ -9,18 +9,18 @@ const path = require("path");
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
-  cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
-    credentials: true,
-  },
+  // cors: {
+  //   origin: "http://localhost:3000",
+  //   methods: ["GET", "POST"],
+  //   allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
+  //   credentials: true,
+  // },
 });
  
-app.use(
+  app.use(
   cors({
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
+    origin: ["https://ahmedohadi.github.io", "https://alje-digital-cafe-890211ee848f.herokuapp.com"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
     credentials: true,
   })

@@ -13,6 +13,14 @@ import reportWebVitals from './reportWebVitals';
 // }
 // app.use(cors(corsOptions));
 
+app.use(
+  cors({
+    origin: ["https://ahmedohadi.github.io", "https://alje-digital-cafe-890211ee848f.herokuapp.com"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
+    credentials: true,
+  })
+);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

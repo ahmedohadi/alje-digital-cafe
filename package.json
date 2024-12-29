@@ -1,16 +1,173 @@
 {
-  "dependencies": {
+  
+    "name": "alje-digital-cafe",
+  
+    "version": "1.0.0",
+  
+    "main": "src/index.js",
+  
+    "homepage": "https://ahmedohadi.github.io/alje-digital-cafe",
+  
+    "dependencies": {
+  
+      
+    "@craco/craco": "^7.1.0",
+  
+      
+    "assert": "^2.1.0",
+  
+      
+    "bootstrap": "^5.3.3",
+  
+      
+    "bootstrap-icons": "^1.11.3",
+  
+      
+    "browserify-zlib": "^0.2.0",
+  
+      
+    "buffer": "^6.0.3",
+  
+      
+    "cors": "^2.8.5",
+  
+      
+    "crypto-browserify": "^3.12.1",
+  
+      
+    "https-browserify": "^1.0.0",
+  
+      
+    "multer": "^1.4.5-lts.1",
+  
+      
+    "net-browserify": "^0.2.4",
+  
+      
+    "path-browserify": "^1.0.1",
+  
+      
+    "process": "^0.11.10",
+  
+      
+    "querystring-es3": "^0.2.1",
+  
+      
     "react": "^18.3.1",
+  
+      
     "react-dom": "^18.3.1",
-    "react-scripts": "^5.0.1"
-  },
-  "devDependencies": {
+  
+      
+    "react-router-dom": "^7.1.1",
+  
+      
+    "react-scripts": "^5.0.1",
+  
+      
+    "react-select": "^5.9.0",
+  
+      
+    "react-toastify": "^11.0.2",
+  
+      
+    "socket.io": "^4.8.1",
+  
+      
+    "socket.io-client": "^4.8.1",
+  
+      
+    "stream-browserify": "^3.0.0",
+  
+      
+    "stream-http": "^3.2.0",
+  
+      
+    "tls-browserify": "^0.2.2",
+  
+      
+    "url": "^0.11.4",
+  
+      
+    "util": "^0.12.5",
+  
+      
+    "vm-browserify": "^1.1.2",
+  
+      
+    "web-vitals": "^4.2.4"
+  
+    },
+  
+    "devDependencies": {
+  
+      
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+  
+      
     "webpack": "^5.97.0",
+  
+      
     "webpack-cli": "^5.1.4",
+  
+      
     "webpack-dev-server": "^5.1.0"
-  },
-  "scripts": {
-  "start": "react-scripts start, node app.js"
-  }
-
+  
+    },
+  
+    "scripts": {
+  
+      
+    "start": "craco start && node app.js",
+  
+      
+    "build": "craco build",
+  
+      
+    "test": "craco test",
+  
+      
+    "eject": "react-scripts eject"
+  
+    },
+  
+    "browserslist": {
+  
+      
+    "production": [
+  
+      
+      
+    ">0.2%",
+  
+      
+      
+    "not dead",
+  
+      
+      
+    "not op_mini all"
+  
+      
+    ],
+  
+      
+    "development": [
+  
+      
+      
+    "last 1 chrome version",
+  
+      
+      
+    "last 1 firefox version",
+  
+      
+      
+    "last 1 safari version"
+  
+      
+    ]
+  
+    }
 }

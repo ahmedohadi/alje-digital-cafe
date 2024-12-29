@@ -3,14 +3,14 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-const express = require('express');
+// const express = require('express');
 const app = express();
 
 const cors = require('cors');
 app.use(
   
   cors({
-    origin: ["https://ahmedohadi.github.io", "https://alje-digital-cafe-890211ee848f.herokuapp.com"],
+    origin: ["https://ahmedohadi.github.io/", "https://alje-digital-cafe-890211ee848f.herokuapp.com/"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
     credentials: true,

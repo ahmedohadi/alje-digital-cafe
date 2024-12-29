@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { io } from "socket.io-client";
-import "../fonts.css";
+import io from "socket.io-client";
+import "../fonts.css"; // Custom font
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
-const socket = io("https://git.heroku.com/alje-digital-cafe.git");
+
+const socket = io("https://alje-digital-cafe-890211ee848f.herokuapp.com/"); // Backend URL
+
+// const socket = io("https://git.heroku.com/alje-digital-cafe.git");
 
 const Admin = () => {
   const [menuItems, setMenuItems] = useState([]);

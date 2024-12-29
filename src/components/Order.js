@@ -2,11 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { io } from "socket.io-client";
-import ReactToastify from 'react-toastify';
+import io from "socket.io-client";
 import "../fonts.css"; // Custom font
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
-const socket = io("https://git.heroku.com/alje-digital-cafe.git"); // Adjust the URL to match your backend server
+const socket = io("https://alje-digital-cafe-890211ee848f.herokuapp.com/"); // Backend URL
 
 const Order = () => {
   const [orders, setOrders] = useState([]);

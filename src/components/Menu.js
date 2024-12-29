@@ -3,12 +3,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import React, { useEffect, useRef, useState } from "react";
 import Select from "react-select";
-import { io } from "socket.io-client";
+// import { io } from "socket.io-client";
+import io from "socket.io-client";
+
 import "../fonts.css";
 import "./Menu.css";
 
-// const socket = io("http://localhost:4000");
-const socket = io("https://git.heroku.com/alje-digital-cafe.git");
+const socket = io("https://alje-digital-cafe-890211ee848f.herokuapp.com/"); // Backend URL
+
+
 const Menu = () => {
   const [order, setOrder] = useState({
     name: "",

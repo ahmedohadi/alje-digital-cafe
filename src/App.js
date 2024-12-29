@@ -1,45 +1,39 @@
-// import logo from './logo.svg';
-// import './App.css';
 
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
 
-// export default App;
-
-import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import io from 'socket.io-client';
 import Menu from './components/Menu';
 import Order from './components/Order';
 import Admin from './components/Admin';
 
+const socket = io("https://alje-digital-cafe-890211ee848f.herokuapp.com/");  // Backend URL
+
 function App() {
+  const [menuItems, setMenuItems] = useState([]);
+
+  useEffect(() => {
+    // Listen for the initial menu items sent by the backend
+    socket.on("initialMenuItems", (items) => {
+      console.log("Received menu items:", items);  // Log to verify the received data
+      setMenuItems(items);  // Update state with the menu items
+    });
+
+    // Clean up the socket connection when the component unmounts
+    return () => {
+      socket.off("initialMenuItems");
+    };
+  }, []);
+
   return (
     <Router>
-      <Switch>
-        <Route path="/menu" component={Menu} />
-        <Route path="/order" component={Order} />
-        <Route path="/admin" component={Admin} />
-        <Route path="/" exact component={Menu} />
-        <Route path="*" component={Menu} />
-      </Switch>
+      <Routes>
+        <Route path="/menu" element={<Menu menuItems={menuItems} />} />
+        <Route path="/order" element={<Order />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/" element={<Menu menuItems={menuItems} />} />
+        <Route path="*" element={<Menu menuItems={menuItems} />} />
+      </Routes>
     </Router>
   );
 }

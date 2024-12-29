@@ -5,26 +5,30 @@ const cors = require("cors");
 const { v4: uuidv4 } = require("uuid");
 const multer = require("multer");
 const path = require("path");
+
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server, {
+  cors: {
+    origin: [
+      "http://localhost:3000", // Local development frontend
+      "https://ahmedohadi.github.io", // GitHub Pages frontend
+      "https://alje-digital-cafe-890211ee848f.herokuapp.com" // Heroku frontend
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
+    credentials: true,
+  },
+});
 
-// CORS configuration allowing multiple origins
-const corsOptions = {
-  origin: [
-    "http://localhost:3000", // Local development frontend
-    "https://ahmedohadi.github.io", // GitHub Pages frontend
-    "https://alje-digital-cafe-890211ee848f.herokuapp.com" // Heroku frontend
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
-  credentials: true,
-};
+// Middleware configuration
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Apply CORS middleware
-app.use(cors(corsOptions));
+// Serve static files from the 'uploads' directory
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Set up storage engine for multer
+// Image upload handling
 const storage = multer.diskStorage({
   destination: "./uploads/",
   filename: (req, file, cb) => {
@@ -33,26 +37,23 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Serve static files from the 'uploads' directory
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// CORS middleware
+const corsOptions = {
+  origin: [
+    "http://localhost:3000",
+    "https://ahmedohadi.github.io",
+    "https://alje-digital-cafe-890211ee848f.herokuapp.com",
+  ],
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 let orders = [];
 let menuItems = [
   { name: "Espresso", options: [] },
   { name: "Black Coffee", options: [] },
   { name: "Cappuccino", options: [] },
-  { name: "Turkish Coffee", options: [] },
-  { name: "Special Coffee", options: [] },
-  { name: "Latte", options: [] },
-  { name: "Ristretto", options: [] },
-  { name: "Arabic Coffee", options: [] },
-  { name: "Flat White", options: [] },
-  { name: "Nescafe", options: [] },
-  { name: "Nescafe 3 in 1", options: [] },
-  { name: "Green Tea", options: [] },
-  { name: "Red Tea", options: [] },
-  { name: "Water", options: ["Ice", "Warm"] },
-  { name: "Ice Cubes", options: [] },
+  // Add more items here...
 ];
 
 io.on("connection", (socket) => {

@@ -7,19 +7,24 @@ const multer = require("multer");
 const path = require("path");
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server)
+const io = socketIo(server);
 
- 
-  app.use(
-  cors({
-    origin: ["https://ahmedohadi.github.io", "https://alje-digital-cafe-890211ee848f.herokuapp.com"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
-    credentials: true,
-  })
-);
+// CORS configuration allowing multiple origins
+const corsOptions = {
+  origin: [
+    "http://localhost:3000", // Local development frontend
+    "https://ahmedohadi.github.io", // GitHub Pages frontend
+    "https://alje-digital-cafe-890211ee848f.herokuapp.com" // Heroku frontend
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
+  credentials: true,
+};
 
-// Set up storage engine
+// Apply CORS middleware
+app.use(cors(corsOptions));
+
+// Set up storage engine for multer
 const storage = multer.diskStorage({
   destination: "./uploads/",
   filename: (req, file, cb) => {
@@ -46,8 +51,8 @@ let menuItems = [
   { name: "Nescafe 3 in 1", options: [] },
   { name: "Green Tea", options: [] },
   { name: "Red Tea", options: [] },
-  { name: "Water", options: ["Ice", "Warm"] }, // Add water options
-  { name: "Ice Cubes", options: [] }, // Add ice cube options
+  { name: "Water", options: ["Ice", "Warm"] },
+  { name: "Ice Cubes", options: [] },
 ];
 
 io.on("connection", (socket) => {
